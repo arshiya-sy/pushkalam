@@ -1,0 +1,5676 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pushkalam Heritage</title>
+    <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+    <!-- EmailJS -->
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+    <style>
+        /* Font Faces - Using Google Fonts for Raleway */
+
+        /* CSS Variables */
+        :root {
+            --font-gray: #6b7280;
+            --font: #000000;
+            --bg-black: #000000;
+            --white: #ffffff;
+            --transparent: transparent;
+            --heading-color: rgb(191, 150, 108);
+            --dark-teal: rgb(0, 49, 48);
+        }
+
+        /* Global Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        /* Apply heading color to all heading elements */
+        h1, h2, h3, h4, h5, h6 {
+            color: var(--heading-color);
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Raleway', sans-serif;
+            font-weight: 400;
+            line-height: 1.6;
+            color: #333;
+            overflow-x: hidden;
+            cursor: default;
+        }
+
+        a, button, .cta-button, .button-outline, .nav-links a, .aerial-nav,
+        .aerial-dot, .success-popup-btn, .download-btn, .tab-button {
+            cursor: pointer;
+        }
+
+        /* Navigation Styles */
+        .navigation {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 0.5rem 2rem;
+            transition: all 0.3s ease;
+            border-bottom-left-radius: 40px;
+            border-bottom-right-radius: 40px;
+        }
+
+        .nav-container {
+            max-width: 1240px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .nav-logo h2 {
+            font-family: 'Raleway';
+            font-size: 1.3rem;
+            font-weight: 400;
+            color: #2c3e50;
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: #333;
+            font-weight: 600 !important;
+            font-size: 14px;
+            transition: color 0.3s ease;
+            position: relative;
+            font-family: 'Raleway', sans-serif !important;
+        }
+
+        .nav-links a:hover {
+            color: #27ae60;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: #27ae60;
+            transition: width 0.3s ease;
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        .cta-button {
+            background: var(--dark-teal);
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 30px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'Raleway', sans-serif;
+        }
+
+        .cta-button:hover {
+            background: rgba(0, 49, 48, 0.8);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 49, 48, 0.3);
+        }
+
+        /* Hero Styles */
+        .hero {
+            height: 100vh;
+            width: 100vw;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-background {
+            height: 100vh;
+            width: 100vw;
+            background: url('assets/ver2.webp') center/cover no-repeat; /* Using Pg-6 image */
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            display: flex;
+            align-items: center;
+            position: relative;
+        }
+
+        .hero-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            width: 100%;
+            margin-top: 150px;
+        }
+
+        .hero-text {
+            max-width: 600px;
+        }
+
+        .hero-title {
+            font-family: 'Raleway';
+            font-size: clamp(2.2rem, 6vw, 4.5rem);
+            font-weight: 400;
+            color: white; /* Keep white for hero to maintain contrast on dark background */
+            margin-bottom: 1.5rem;
+            line-height: 1.1;
+        }
+
+        .h1-scroll-box {
+            -webkit-backface-visibility: hidden;
+            backface-visibility: hidden;
+            transform-style: preserve-3d;
+            height: 100%;
+            position: absolute;
+            inset: 0%;
+            width: 100%;
+        }
+
+        .h1-scroll-box.h1-scroll-1 {
+            transform-style: preserve-3d;
+            transform: rotateX(0deg) translateZ(50px);
+        }
+
+        .h1-scroll-box.h1-scroll-2 {
+            transform-style: preserve-3d;
+            transform: rotateX(90deg) translateZ(50px);
+        }
+
+        .h1-scroll-box.h1-scroll-3 {
+            transform-style: preserve-3d;
+            transform: rotateX(180deg) translateZ(50px);
+        }
+
+        .h1-scroll-box.h1-scroll-4 {
+            transform-style: preserve-3d;
+            transform: rotateX(270deg) translateZ(50px);
+        }
+
+        .h1-scroll-box.cc_word1 {
+            transform-style: preserve-3d;
+            transform: rotateX(0deg) translateZ(50px);
+        }
+
+        .h1-scroll-container {
+            position: relative;
+            width: 100%;
+            max-width: none;
+            margin-top: 1.875rem;
+            height: 160px;
+            perspective: 1000px;
+            transform-style: preserve-3d;
+            overflow: visible;
+        }
+
+        .h1-scroll-word {
+            -webkit-backface-visibility: hidden;
+            backface-visibility: hidden;
+            color: white; /* Restored to original white color */
+            margin-top: 0;
+            margin-bottom: 0;
+            font-family: 'Raleway', sans-serif;
+            font-size: 150px;
+            line-height: 160px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            height: 100%;
+            width: 100%;
+            text-shadow: 2px 2px 22px rgba(0, 0, 0, 0.3);
+        }
+
+
+
+        .hero-subtitle {
+            font-family: 'Raleway', sans-serif;
+            font-size: 1.2rem;
+            color: rgba(255, 255, 255, 0.9);
+            line-height: 1.6;
+            max-width: 500px;
+            font-weight: 500;
+        }
+
+
+        /* Intro Styles */
+        .intro {
+            padding: 8rem 0;
+            background: transparent;
+            position: relative;
+            margin-left: auto;
+            margin-right: auto;
+            display: flex;
+            justify-content: center;
+        }
+
+        .intro-container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 1rem;
+            background: transparent;
+            z-index: 10;
+        }
+
+        .intro-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .intro-title {
+            color: var(--heading-color);
+            font-size: 20px;
+            font-weight: 500;
+            line-height: 20px;
+            font-family: 'Raleway', sans-serif;
+            letter-spacing: 2px;
+        }
+
+        .intro-main {
+            text-align: center;
+            margin-bottom: 3rem;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .intro-text {
+            font-family: Raleway, sans-serif;
+            font-weight: 300;
+            margin-top: 1.25rem;
+            margin-bottom: 5rem;
+            font-size: 32px;
+            line-height: 46px;
+            color: var(--font);
+            text-align: center;
+            width: 100%;
+            max-width: 1200px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .details-grid {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .detail-item {
+            padding: 0.5rem 0.5rem;
+            text-align: center;
+            background: white;
+            border-right: 1px solid #e0e0e0;
+        }
+        
+        .detail-item:nth-child(3),
+        .detail-item:nth-child(6) {
+            border-right: none;
+        }
+
+        .detail-label {
+            font-family: 'Raleway';
+            font-size: 1.5rem;
+            font-weight: 400;
+            color: var(--heading-color);
+            margin-bottom: 0.75rem;
+        }
+
+        .detail-value {
+            margin-top: 15px;
+            margin-bottom: 10px;
+            font-family: 'Raleway', sans-serif;
+            font-size: 18px;
+            font-weight: 500;
+            line-height: 26px;
+            color: var(--font);
+        }
+
+        /* Aerial View Section */
+        .aerial-view {
+            background: white;
+        }
+
+        .aerial-container {
+            max-width: 1300px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        .aerial-image-wrapper {
+            position: relative;
+            width: 100%;
+            border-radius: 60px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+        }
+
+        .aerial-gallery {
+            position: relative;
+            width: 100%;
+        }
+
+        .aerial-slide {
+            position: absolute;
+            width: 100%;
+            opacity: 0;
+            transition: all 0.8s cubic-bezier(0.25, 0.8, 0.25, 1);
+            transform: scale(1.05);
+        }
+
+        .aerial-slide.active {
+            opacity: 1;
+            transform: scale(1);
+            position: relative;
+        }
+
+        .aerial-image {
+            width: 100%;
+            height: auto;
+            object-fit: cover;
+            display: block;
+        }
+
+        /* Navigation Arrows */
+        .aerial-nav {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(255, 255, 255, 0.9);
+            border: none;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            font-size: 18px;
+            font-weight: bold;
+            color: #2c3e50;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+            z-index: 10;
+            opacity: 0;
+        }
+
+        .aerial-image-wrapper:hover .aerial-nav {
+            opacity: 1;
+        }
+
+        .aerial-prev {
+            left: 20px;
+        }
+
+        .aerial-next {
+            right: 20px;
+        }
+
+        .aerial-nav:hover {
+            background: rgba(255, 255, 255, 1);
+            transform: translateY(-50%) scale(1.1);
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Navigation Dots */
+        .aerial-dots {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 12px;
+            z-index: 10;
+        }
+
+        .aerial-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.5);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+
+        .aerial-dot:hover {
+            background: rgba(255, 255, 255, 0.8);
+            transform: scale(1.2);
+        }
+
+        .aerial-dot.active {
+            background: rgba(255, 255, 255, 1);
+            transform: scale(1.3);
+            box-shadow: 0 0 10px rgba(255, 255, 255, 0.8);
+        }
+
+        .call-to-action {
+            position: absolute;
+            bottom: 2rem;
+            right: 2rem;
+            background: rgba(255, 255, 255, 0.9);
+            padding: 1rem 1.5rem;
+            border-radius: 10px;
+            backdrop-filter: blur(10px);
+            z-index: 10;
+        }
+
+        .call-to-action p {
+            font-family: 'Raleway', sans-serif;
+            font-size: 1rem;
+            font-weight: 600;
+            color: #2c3e50;
+            margin: 0;
+        }
+
+        /* Discover Section */
+        .discover {
+            padding: clamp(64px, 10vw, 88px) clamp(16px, 5vw, 64px);
+            background: white;
+        }
+
+        .discover-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .discover-header {
+            margin-bottom: 4rem;
+        }
+
+        .discover-title {
+            font-family: 'Raleway';
+            font-size: clamp(4rem, 8vw, 6rem);
+            font-weight: 500;
+            color: var(--heading-color);
+            margin-bottom: 1.5rem;
+            text-align: left;
+        }
+
+        .h3-big {
+            font-family: Raleway, sans-serif;
+            font-size: 75px;
+            font-weight: 400;
+            line-height: 85px;
+            margin-top: 0;
+            margin-bottom: 0.625rem;
+            color: var(--heading-color);
+        }
+
+        .discover-description {
+            text-indent: 23%;
+            margin-top: 15px;
+            font-family: 'Raleway', sans-serif;
+            font-size: 32px;
+            font-weight: 300;
+            line-height: 42px;
+            color: var(--font);
+        }
+
+        .discover-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 28px;
+        }
+
+        .image-card,
+        .cta-card {
+            border-radius: 24px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            height: 400px;
+            overflow: hidden;
+        }
+
+        .card-image {
+            width: 120%;
+            height: 120%;
+            object-fit: cover;
+            transition: transform 0.3s ease;
+            transform: scale(1.2);
+        }
+
+        .image-card:hover .card-image {
+            transform: scale(1.25);
+        }
+
+        /* "Book today!" styling */
+        .title.small {
+            color: var(--font-gray);
+            font-family: Satoshi Variable, sans-serif;
+            font-size: 18px;
+            font-weight: 500;
+            line-height: 24px;
+        }
+
+        /* "What are you Waiting for?" styling */
+        .h4-black-to-white {
+            margin-top: 0.5rem;
+            margin-bottom: 0.625rem;
+            font-family: Raleway, sans-serif;
+            font-size: 32px;
+            font-weight: 400;
+            line-height: 36px;
+            color: var(--heading-color);
+        }
+
+        /* Button container */
+        .button-box._30-pixels {
+            margin-top: 30px;
+        }
+
+        /* "Contact Us" button styling */
+        .button-outline {
+            z-index: 1;
+            border: 1px solid var(--bg-black);
+            background-color: var(--transparent);
+            box-shadow: none;
+            color: var(--font);
+            border-radius: 60px;
+            margin-bottom: 0;
+            padding: 18px 35px;
+            font-family: 'Raleway', sans-serif;
+            font-size: 20px;
+            font-weight: 500;
+            line-height: 24px;
+            text-decoration: none;
+            transition: background-color 0.2s, transform 0.2s, color 0.2s;
+            position: relative;
+            display: inline-block;
+            cursor: pointer;
+        }
+
+        .button-outline:hover {
+            background-color: var(--dark-teal);
+            color: var(--white);
+            transform: scale(1.05);
+        }
+
+        /* Dark variant of button */
+        .button-outline.dark {
+            border-color: var(--dark-teal);
+            color: var(--dark-teal);
+        }
+
+        .button-outline.dark:hover,
+        .button-outline.dark:active {
+            background-color: var(--dark-teal);
+            color: var(--white);
+        }
+
+        .cta-card {
+            background: white;
+            border: 1px solid #2c3e50;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+        }
+
+        .cta-content {
+            text-align: center;
+            position: relative;
+            width: 100%;
+        }
+
+        .cta-eyebrow {
+            font-family: 'Raleway', sans-serif;
+            font-size: 0.875rem;
+            color: #2c3e50;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 1rem;
+            font-weight: 500;
+        }
+
+        .cta-headline {
+            color: #2c3e50;
+            margin-bottom: 2rem;
+        }
+
+        .cta-card-button {
+            font-family: 'Raleway', sans-serif;
+            background: transparent;
+            color: var(--bg-black);
+            border: 1px solid var(--bg-black);
+            padding: 0.875rem 2rem;
+            border-radius: 24px;
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-bottom: 2rem;
+        }
+
+        .cta-card-button:hover {
+            background: var(--bg-black);
+            color: var(--white);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 49, 48, 0.3);
+        }
+
+        .cta-icon {
+            position: absolute;
+            bottom: -1rem;
+            right: -1rem;
+            width: 48px;
+            height: 48px;
+            background: white;
+            border: 1px solid rgba(0, 0, 0, 0.10);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            color: #2c3e50;
+        }
+
+        .cta-icon:hover {
+            background: #f8f9fa;
+            transform: scale(1.1);
+        }
+
+        /* Amenities Section */
+        .amenities-section {
+            padding: 72px clamp(16px, 5vw, 64px);
+            background: white;
+        }
+
+        .amenities-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .amenities-header {
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+
+        .amenities-eyebrow {
+            color: var(--heading-color);
+            font-size: 20px;
+            font-weight: 500;
+            line-height: 20px;
+            font-family: 'Raleway', sans-serif;
+            letter-spacing: 2px;
+            margin-bottom: 1.5rem;
+        }
+
+        .amenities-title {
+            font-family: 'Raleway', sans-serif;
+            font-weight: 300;
+            margin-top: 1.25rem;
+            margin-bottom: 5rem;
+            font-size: 32px;
+            line-height: 42px;
+            color: black;
+            text-align: center;
+            width: 100%;
+            max-width: 1200px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .amenities-collage {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 0;
+            border-radius: 30px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            height: 380px;
+        }
+
+        .amenity-image {
+            height: 100%;
+            position: relative;
+        }
+
+        .amenity-image:nth-child(2),
+        .amenity-image:nth-child(3) {
+            border-left: 1px solid rgba(0, 0, 0, 0.06);
+        }
+
+        .amenity-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.3s ease;
+        }
+
+        .amenity-image:hover .amenity-img {
+            transform: scale(1.05);
+        }
+
+        /* Residences Section */
+        .residences-section {
+            padding: clamp(80px, 12vw, 100px) clamp(16px, 5vw, 64px) 80px;
+            background: white;
+        }
+
+        .residences-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .residences-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .residences-title {
+            font-family: 'Raleway', sans-serif;
+            font-size: 75px;
+            font-weight: 400;
+            line-height: 85px;
+            margin-top: 0;
+            margin-bottom: 0.625rem;
+            color: var(--heading-color);
+        }
+
+        .residences-subheading {
+            text-indent: 23%;
+            margin-top: 15px;
+            font-family: 'Raleway', sans-serif;
+            font-size: 32px;
+            font-weight: 300;
+            line-height: 42px;
+            color: var(--font);
+        }
+
+        .residences-showcase {
+            width: 90%;
+            margin: 0 auto;
+        }
+
+        .showcase-image {
+            width: 100%;
+            height: auto;
+            border-radius: 30px;
+            object-fit: cover;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            transition: transform 0.3s ease;
+        }
+
+        .showcase-image:hover {
+            transform: scale(1.02);
+        }
+
+        .day-night-wrapper {
+            position: relative;
+            width: 100%;
+            height: auto;
+            overflow: hidden;
+            cursor: pointer;
+            border-radius: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            transition: transform 0.3s ease;
+        }
+
+        .day-night-wrapper:hover {
+            transform: scale(1.02);
+        }
+
+        .day-night-image {
+            display: block;
+            width: 100%;
+            height: auto;
+            object-fit: cover;
+            transition: opacity 0.5s ease;
+        }
+
+        .day-night-image.night-view {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+        .day-view {
+            opacity: 1;
+            z-index: 1;
+        }
+
+        .night-view {
+            opacity: 0;
+            z-index: 2;
+        }
+
+        .day-night-wrapper:hover .night-view {
+            opacity: 1;
+        }
+
+        .day-night-wrapper:hover .day-view {
+            opacity: 0; 
+        }
+
+        /* Master Plan Section */
+        .master-plan-section {
+            padding: 80px clamp(16px, 5vw, 64px);
+            background: white;
+        }
+
+        .master-plan-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .master-plan-header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .master-plan-eyebrow {
+            color: var(--heading-color);
+            font-size: 20px;
+            font-weight: 500;
+            line-height: 20px;
+            font-family: 'Raleway', sans-serif;
+            letter-spacing: 2px;
+            margin-bottom: 1rem;
+        }
+
+        .master-plan-title {
+            font-family: 'Raleway', sans-serif;
+            font-weight: 400;
+            margin-top: 1.25rem;
+            margin-bottom: 5rem;
+            font-size: 32px;
+            line-height: 42px;
+            color: black;
+            text-align: center;
+            width: 100%;
+            max-width: 1200px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .master-plan-showcase {
+            width: 90%;
+            margin: 0 auto;
+        }
+
+        .master-plan-image {
+            width: 100%;
+            height: auto;
+            border-radius: 30px;
+            object-fit: cover;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            transition: transform 0.3s ease;
+        }
+
+        .master-plan-image:hover {
+            transform: scale(1.02);
+        }
+
+        /* Floor Plans Section */
+        .floor-plans-section {
+            padding: 80px clamp(16px, 5vw, 64px);
+            background: white;
+        }
+
+        @media (max-width: 767px) {
+            .floor-plans-section {
+                padding: 60px clamp(16px, 5vw, 32px);
+            }
+            .details-grid {
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+            }
+        }
+
+        /* Floor Plan Brochure Styles */
+        .floor-plan-brochure-container {
+            width: 100%;
+            max-width: 900px;
+            margin: 0 auto;
+            position: relative;
+            padding: 0 20px;
+        }
+
+        .blurred-brochure {
+            position: relative;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            max-height: 600px;
+        }
+
+        .blur-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            backdrop-filter: blur(8px);
+            background-color: rgba(255, 255, 255, 0.4);
+            z-index: 1;
+            transition: opacity 0.5s ease;
+        }
+
+        .brochure-preview {
+            width: 100%;
+            height: auto;
+            object-fit: cover;
+            display: block;
+        }
+
+        .download-prompt {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: white;
+            padding: 1.5rem;
+            border-radius: 24px;
+            text-align: center;
+            width: 80%;
+            max-width: 500px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            z-index: 2;
+            border: 1px solid var(--dark-teal);
+        }
+
+        /* Responsive styles for floor plan brochure */
+        @media (max-width: 991px) {
+            .floor-plan-brochure-container {
+                max-width: 750px;
+            }
+
+            .blurred-brochure {
+                max-height: 550px;
+            }
+
+            .download-prompt {
+                padding: 2rem;
+                max-width: 450px;
+            }
+        }
+
+        @media (max-width: 767px) {
+            .floor-plan-brochure-container {
+                padding: 0 15px;
+            }
+
+            .blurred-brochure {
+                max-height: 500px;
+            }
+
+            .download-prompt {
+                padding: 1.8rem;
+                width: 85%;
+                max-width: 400px;
+                border-radius: 20px;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .floor-plans-section {
+                padding: 40px clamp(16px, 5vw, 24px);
+            }
+
+            .floor-plan-brochure-container {
+                padding: 0 15px;
+            }
+
+            .blurred-brochure {
+                position: relative;
+                min-height: 500px;
+                max-height: 500px;
+                border-radius: 15px;
+            }
+
+            .blur-overlay {
+                display: block;
+                backdrop-filter: blur(10px);
+                background-color: rgba(255, 255, 255, 0.3);
+            }
+
+            .brochure-preview {
+                display: block;
+                height: 100%;
+                object-fit: cover;
+            }
+
+            .download-prompt {
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                width: 90%;
+                max-width: 90%;
+                padding: 1.5rem;
+                border-radius: 16px;
+                z-index: 5;
+                max-height: 95%;
+                overflow-y: auto;
+            }
+
+            .download-prompt h3 {
+                font-size: 22px;
+                line-height: 26px;
+                margin-bottom: 0.5rem;
+            }
+
+            .download-prompt p {
+                font-size: 14px;
+                margin-bottom: 1.2rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .blurred-brochure {
+                min-height: 450px;
+                max-height: 450px;
+                border-radius: 12px;
+            }
+
+            .blur-overlay {
+                backdrop-filter: blur(8px);
+            }
+
+            .download-prompt {
+                padding: 1.25rem;
+                border-radius: 12px;
+                width: 92%;
+                max-width: 92%;
+            }
+        }
+
+        @media (max-width: 375px) {
+            .floor-plan-brochure-container {
+                padding: 0 10px;
+            }
+
+            .blurred-brochure {
+                min-height: 420px;
+                max-height: 420px;
+                border-radius: 10px;
+            }
+
+            .download-prompt {
+                padding: 1rem;
+                border-radius: 10px;
+                width: 94%;
+                max-width: 94%;
+            }
+
+            .download-prompt h3 {
+                font-size: 18px;
+                line-height: 22px;
+                margin-top: 0;
+                margin-bottom: 8px;
+            }
+
+            .download-prompt p {
+                font-size: 13px;
+                line-height: 1.4;
+                margin-bottom: 10px;
+            }
+        }
+
+        /* Custom Success Popup Styles */
+        .success-popup {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0.7);
+            background-color: white;
+            padding: 30px 40px;
+            border-radius: 15px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+            z-index: 9999;
+            text-align: center;
+            opacity: 0;
+            transition: all 0.3s ease-in-out;
+            pointer-events: none;
+            max-width: 90%;
+            width: 400px;
+        }
+
+        .success-popup.show {
+            opacity: 1;
+            transform: translate(-50%, -50%) scale(1);
+            pointer-events: auto;
+        }
+
+        .success-popup-icon {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background-color: var(--dark-teal);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px auto;
+            color: white;
+            font-size: 40px;
+        }
+
+        .success-popup h3 {
+            font-family: 'Raleway', sans-serif;
+            font-size: 24px;
+            font-weight: 600;
+            color: var(--heading-color);
+            margin: 0 0 10px 0;
+        }
+
+        .success-popup p {
+            font-family: 'Raleway', sans-serif;
+            font-size: 16px;
+            color: #555;
+            margin: 0 0 20px 0;
+            line-height: 1.5;
+        }
+
+        .success-popup-btn {
+            background-color: var(--dark-teal);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 30px;
+            font-family: 'Raleway', sans-serif;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .success-popup-btn:hover {
+            background-color: rgba(0, 49, 48, 0.8);
+            transform: translateY(-2px);
+        }
+
+        .success-popup-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 9998;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            pointer-events: none;
+        }
+
+        .success-popup-overlay.show {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        /* Fix for very small phones */
+        @media (max-width: 320px) {
+            .floor-plan-brochure-container {
+                padding: 0 5px;
+            }
+
+            .blurred-brochure {
+                min-height: 380px;
+                max-height: 380px;
+                border-radius: 8px;
+            }
+
+            .blur-overlay {
+                backdrop-filter: blur(6px);
+            }
+
+            .download-prompt {
+                padding: 12px;
+                border-radius: 8px;
+                width: 96%;
+                max-width: 96%;
+            }
+
+            .download-prompt h3 {
+                font-size: 16px;
+                line-height: 20px;
+                margin-bottom: 6px;
+            }
+
+            .download-prompt p {
+                font-size: 12px;
+                margin-bottom: 8px;
+            }
+        }
+
+        .download-prompt h3 {
+            font-family: Raleway, sans-serif;
+            margin-bottom: 0.625rem;
+            font-size: 32px;
+            line-height: 36px;
+            font-weight: 400;
+            color: var(--heading-color);
+            margin-top: 0.5rem;
+        }
+
+        .download-prompt .eyebrow {
+            color: var(--heading-color);
+            font-size: 20px;
+            font-weight: 500;
+            line-height: 20px;
+            font-family: 'Raleway', sans-serif;
+            letter-spacing: 2px;
+            margin-bottom: 1rem;
+        }
+
+        .download-prompt p {
+            margin-bottom: 1.8rem;
+            color: #555;
+            font-size: 1.1rem;
+            line-height: 1.5;
+            max-width: 90%;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .floorplan-form {
+            width: 100%;
+        }
+
+        .form-group {
+            margin-bottom: 1.2rem;
+        }
+
+        .download-prompt .button-box {
+            margin-top: 1.5rem;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-family: 'Raleway', sans-serif;
+            font-size: 1rem;
+        }
+
+        .download-btn {
+            z-index: 1;
+            border: 1px solid var(--dark-teal);
+            background-color: var(--dark-teal);
+            box-shadow: none;
+            color: white;
+            border-radius: 60px;
+            margin-bottom: 0;
+            padding: 18px 35px;
+            font-family: 'Raleway', sans-serif;
+            font-size: 18px;
+            font-weight: 500;
+            line-height: 24px;
+            text-decoration: none;
+            transition: background-color 0.2s, transform 0.2s, color 0.2s;
+            position: relative;
+            display: inline-block;
+            cursor: pointer;
+        }
+
+        /* Responsive styles for brochure form */
+        @media (max-width: 767px) {
+            .form-group {
+                margin-bottom: 1rem;
+            }
+
+            .form-group input {
+                padding: 0.7rem 0.9rem;
+                font-size: 0.95rem;
+                border-radius: 7px;
+            }
+
+            .download-prompt .button-box {
+                margin-top: 1.2rem;
+            }
+
+            .download-btn {
+                padding: 15px 30px;
+                font-size: 16px;
+                min-width: 180px;
+                border-radius: 50px;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .form-group {
+                margin-bottom: 12px;
+            }
+
+            .form-group input {
+                padding: 10px 12px;
+                font-size: 14px;
+                border-radius: 6px;
+                height: 40px;
+            }
+
+            .download-prompt .button-box {
+                margin-top: 15px;
+            }
+
+            .download-btn {
+                padding: 10px 20px;
+                font-size: 15px;
+                min-width: 180px;
+                border-radius: 30px;
+                line-height: 20px;
+                height: auto;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .form-group {
+                margin-bottom: 10px;
+            }
+
+            .download-btn {
+                padding: 9px 18px;
+                min-width: 160px;
+            }
+        }
+
+        @media (max-width: 375px) {
+            .form-group {
+                margin-bottom: 8px;
+            }
+
+            .form-group input {
+                padding: 8px 10px;
+                font-size: 13px;
+                height: 36px;
+            }
+
+            .download-prompt .button-box {
+                margin-top: 12px;
+            }
+
+            .download-btn {
+                padding: 8px 16px;
+                font-size: 13px;
+                min-width: 140px;
+                border-radius: 25px;
+                line-height: 18px;
+            }
+        }
+
+        @media (max-width: 320px) {
+            .form-group {
+                margin-bottom: 6px;
+            }
+
+            .form-group input {
+                padding: 6px 8px;
+                font-size: 12px;
+                height: 32px;
+            }
+
+            .download-prompt .button-box {
+                margin-top: 10px;
+            }
+
+            .download-btn {
+                padding: 7px 14px;
+                font-size: 12px;
+                min-width: 120px;
+                line-height: 16px;
+            }
+        }
+
+        .download-btn:hover {
+            background-color: rgba(0, 49, 48, 0.8);
+            transform: scale(1.05);
+        }
+
+        .floor-plans-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .floor-plans-header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .floor-plans-eyebrow {
+            color: var(--heading-color);
+            font-size: 20px;
+            font-weight: 500;
+            line-height: 20px;
+            font-family: 'Raleway', sans-serif;
+            letter-spacing: 2px;
+            margin-bottom: 1rem;
+        }
+
+        .floor-plans-title {
+            font-family: 'Raleway', sans-serif;
+            font-weight: 400;
+            margin-top: 1.25rem;
+            margin-bottom: 0.625rem;
+            font-size: 32px;
+            line-height: 42px;
+            color: black;
+            text-align: center;
+            width: 100%;
+            max-width: 1200px;
+            margin-bottom: 5rem;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .floor-plans-tabs {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-bottom: 3rem;
+        }
+
+        .tab-button {
+            z-index: 1;
+            border: 1px solid var(--dark-teal);
+            background-color: var(--transparent);
+            box-shadow: none;
+            color: var(--font);
+            border-radius: 60px;
+            margin-bottom: 0;
+            padding: 18px 35px;
+            font-family: 'Raleway', sans-serif;
+            font-size: 20px;
+            font-weight: 500;
+            line-height: 24px;
+            text-decoration: none;
+            transition: background-color 0.2s, transform 0.2s, color 0.2s;
+            position: relative;
+            display: inline-block;
+            cursor: pointer;
+        }
+
+        .tab-button:hover {
+            background-color: var(--dark-teal);
+            color: var(--white);
+            transform: scale(1.05);
+        }
+
+        .tab-button.active {
+            background-color: var(--dark-teal);
+            color: var(--white);
+        }
+
+        .floor-plan-image-container {
+            width: 100%;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .floor-plan-image {
+            width: 100%;
+            height: auto;
+            border-radius: 30px;
+            object-fit: contain;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            background: white;
+        }
+
+        .duplex-images {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 2rem;
+            width: 100%;
+        }
+
+        .duplex-floor {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .duplex-floor-title {
+            color: #2c3e50;
+            text-align: center;
+            margin: 0;
+        }
+
+
+
+        /* Intro Text Responsive */
+        @media (max-width: 991px) {
+            .intro-text {
+                font-size: 38px;
+                line-height:40px;
+                margin-bottom: 4.5rem;
+                max-width: 900px;
+            }
+
+            .intro-container {
+                padding: 3rem 2rem;
+            }
+
+            .details-grid {
+                gap: 1.5rem;
+            }
+
+            .nav-container {
+                padding: 0 2rem;
+            }
+
+            .nav-links {
+                gap: 1.75rem;
+            }
+
+            .hero-content {
+                margin-top: 130px;
+            }
+
+            .h1-scroll-word {
+                justify-content: center;
+                font-size: 110px;
+                line-height: 160px;
+            }
+
+            .h1-scroll-container {
+                height: 160px;
+            }
+        }
+
+        @media (max-width: 767px) {
+            .intro-text {
+                font-size: 32px;
+                line-height: 36px;
+                margin-bottom: 3.5rem;
+                padding: 0 0.75rem;
+            }
+
+            .intro-container {
+                padding: 2.5rem 1.5rem;
+            }
+
+            .hero-content {
+                margin-top: 100px;
+                padding: 0 1.5rem;
+            }
+
+            .h1-scroll-word {
+                justify-content: center;
+                font-size: 100px !important;
+                line-height: 120px;
+            }
+
+            .h1-scroll-container {
+                height: 120px;
+                margin-top: 1.25rem;
+            }
+        }
+
+        @media (max-width: 479px) {
+            .intro-text {
+                font-size: 26px;
+                line-height: 36px;
+                width: 100%;
+                margin-bottom: 2.5rem;
+                padding: 0 0.5rem;
+                text-align: center;
+            }
+
+            .intro-container {
+                padding: 1.5rem 1rem;
+                text-align: center;
+            }
+
+            .intro-header {
+                text-align: center;
+            }
+
+            .detail-item {
+                text-align: center;
+            }
+
+            .detail-label {
+                font-size: 1.2rem;
+                margin-bottom: 0.5rem;
+            }
+
+            .detail-value {
+                font-size: 16px;
+                line-height: 22px;
+            }
+
+            .hero-content {
+                padding: 0 1.5rem;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .h1-scroll-container {
+                margin: 0 auto;
+                text-align: center;
+                width: 100%;
+            }
+
+            .h1-scroll-word {
+                justify-content: center;
+            }
+
+            .hero-text {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                max-width: 100%;
+            }
+
+            .hero-subtitle {
+                text-align: center;
+                max-width: 90%;
+            }
+        }
+
+        /* Residences and Amenities Text Responsive */
+        @media (max-width: 991px) {
+            .residences-subheading,
+            .amenities-title {
+                font-size: 38px;
+                line-height: 56px;
+                margin-bottom: 4.5rem;
+            }
+        }
+
+        @media (max-width: 767px) {
+            .residences-subheading,
+            .amenities-title {
+                font-size: 34px;
+                line-height: 52px;
+                margin-bottom: 4rem;
+            }
+        }
+
+        @media (max-width: 479px) {
+            .residences-subheading,
+            .amenities-title {
+                font-size: 32px;
+                line-height: 50px;
+                width: 100%;
+                margin-bottom: 3.5rem;
+            }
+        }
+
+        /* H1 Scroll Effect Responsive */
+        @media (max-width: 991px) {
+            .h1-scroll-word {
+                font-size: 140px;
+                line-height: 150px;
+            }
+
+            .h1-scroll-container {
+                height: 210px;
+            }
+
+            .h1-scroll-box.h1-scroll-4 {
+                transform: rotateX(270deg) translateZ(43px);
+            }
+
+            .h1-scroll-box.h1-scroll-3 {
+                transform: rotateX(180deg) translateZ(43px);
+            }
+
+            .h1-scroll-box.h1-scroll-2 {
+                transform: rotateX(90deg) translateZ(43px);
+            }
+
+            .h1-scroll-box.cc_word1,
+            .h1-scroll-box.h1-scroll-1 {
+                transform: rotateX(0deg) translateZ(43px);
+            }
+        }
+
+        @media (max-width: 767px) {
+
+            .h1-scroll-container {
+                height: 160px;
+            }
+
+            .h1-scroll-box.h1-scroll-4 {
+                transform: rotateX(270deg) translateZ(25px);
+            }
+
+            .h1-scroll-box.h1-scroll-3 {
+                transform: rotateX(180deg) translateZ(25px);
+            }
+
+            .h1-scroll-box.h1-scroll-2 {
+                transform: rotateX(90deg) translateZ(25px);
+            }
+
+            .h1-scroll-box.cc_word1,
+            .h1-scroll-box.h1-scroll-1 {
+                transform: rotateX(0deg) translateZ(25px);
+            }
+        }
+
+        @media (max-width: 479px) {
+            .h1-scroll-word {
+                font-size: 60px;
+                line-height: 80px;
+                margin-left: 0;
+            }
+
+            .h1-scroll-container {
+                height: 80px;
+                margin-top: 1rem;
+            }
+
+            .hero-content {
+                margin-top: 70px;
+                padding: 0 1rem;
+            }
+        }
+
+        /* Contact Section for Tablets */
+        @media (min-width: 480px) and (max-width: 767px) {
+            .contact-section {
+                padding: 60px clamp(16px, 5vw, 32px) 80px;
+            }
+
+            .contact-main-card {
+                display: flex !important;
+                flex-direction: column !important;
+                gap: 0 !important;
+                min-height: auto !important;
+                border-radius: 40px;
+            }
+
+            .contact-left-content {
+                padding: 3.5rem 2.5rem;
+                text-align: center;
+                order: 1;
+            }
+
+            .contact-headline {
+                font-size: 60px;
+                line-height: 70px;
+                margin-bottom: 1.5rem;
+            }
+
+            .contact-description {
+                font-size: 18px;
+                line-height: 28px;
+                max-width: 600px;
+                margin: 0 auto 2rem;
+            }
+
+            .contact-form-card {
+                margin: 1.5rem auto;
+                border-radius: 35px;
+                max-width: 500px;
+                padding: 2rem;
+                order: 2;
+                box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
+            }
+
+            .contact-phone-cta {
+                position: relative;
+                bottom: auto;
+                right: auto;
+                margin: 1rem auto;
+                display: block;
+                text-align: center;
+                width: fit-content;
+            }
+        }
+
+        /* Title Elements Responsive */
+        @media (max-width: 767px) {
+            .intro-title,
+            .amenities-eyebrow,
+            .floor-plans-eyebrow,
+            .proximity-buttons-title,
+            .faq-eyebrow {
+                font-size: 18px;
+                line-height: 24px;
+            }
+        }
+
+        @media (max-width: 479px) {
+            .intro-title,
+            .amenities-eyebrow,
+            .floor-plans-eyebrow,
+            .proximity-buttons-title,
+            .faq-eyebrow {
+                font-size: 14px;
+                line-height: 14px;
+            }
+        }
+
+        @media (max-width: 376px) {
+            .intro-title,
+            .amenities-eyebrow,
+            .floor-plans-eyebrow,
+            .proximity-buttons-title,
+            .faq-eyebrow {
+                font-size: 13px;
+                line-height: 13px;
+            }
+        }
+
+        /* Responsive styles for new CTA elements */
+        @media (max-width: 767px) {
+            .title.small {
+                font-size: 18px;
+                line-height: 24px;
+            }
+        }
+
+        @media (max-width: 479px) {
+            .title.small {
+                font-size: 14px;
+                line-height: 14px;
+            }
+        }
+
+        @media (max-width: 376px) {
+            .title.small {
+                font-size: 13px;
+                line-height: 13px;
+            }
+        }
+
+        /* FAQ Description Responsive */
+        @media (max-width: 991px) {
+            .faq-description {
+                font-size: 32px;
+                line-height: 46px;
+                max-width: 500px;
+            }
+        }
+
+        @media (max-width: 991px) {
+            .faq-heading {
+                font-size: clamp(3.5rem, 7vw, 5rem);
+                text-align: center;
+            }
+
+            .faq-section {
+                padding: 70px clamp(24px, 5vw, 48px);
+            }
+
+            .faq-content {
+                gap: 3rem;
+            }
+
+            .faq-left {
+                padding-right: 1rem;
+            }
+
+            .faq-right {
+                padding-left: 1rem;
+            }
+
+            .faq-item {
+                margin-bottom: 1rem;
+                border-radius: 25px;
+            }
+
+            .faq-button {
+                padding: 18px 22px;
+            }
+
+            .faq-question {
+                font-size: 20px;
+                margin-bottom: 0.5rem;
+            }
+
+            .faq-lead {
+                font-size: 17px;
+                line-height: 1.5;
+            }
+
+            .faq-answer-content p {
+                font-size: 22px;
+                line-height: 32px;
+            }
+
+            .faq-description {
+                text-align: left;
+                max-width: 100%;
+                text-indent: 10%;
+                margin-bottom: 2rem;
+            }
+
+            .faq-eyebrow {
+                text-align: center;
+            }
+        }
+
+        @media (max-width: 767px) {
+            .faq-description {
+                font-size: 30px;
+                line-height: 44px;
+                text-indent: 10%;
+            }
+        }
+
+        @media (max-width: 767px) {
+            .faq-heading {
+                font-size: clamp(3rem, 6vw, 4.5rem);
+                text-align: center;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .faq-heading {
+                font-size: 42px;
+                text-align: center;
+                line-height: 1.2;
+                margin-bottom: 1rem;
+            }
+
+            .faq-description {
+                font-size: 24px !important;
+                line-height: 32px !important;
+                text-indent: 0;
+                text-align: center;
+                padding: 0 1rem;
+                margin: 0 auto 2rem;
+            }
+
+            .faq-section {
+                padding: 60px clamp(16px, 5vw, 32px);
+            }
+
+            .faq-content {
+                display: flex !important;
+                flex-direction: column !important;
+                gap: 2.5rem !important;
+                align-items: center !important;
+                width: 100%;
+            }
+
+            .faq-left {
+                padding-right: 0 !important;
+                max-width: 600px !important;
+                text-align: center !important;
+                width: 100%;
+            }
+
+            .faq-right {
+                padding-left: 0 !important;
+                width: 100% !important;
+                max-width: 600px !important;
+            }
+
+            .faq-eyebrow {
+                text-align: center;
+                margin-bottom: 1.5rem;
+            }
+
+            .faq-item {
+                border-radius: 20px;
+                margin-bottom: 1rem;
+            }
+
+            .faq-button {
+                padding: 16px 20px;
+            }
+
+            .faq-question {
+                font-size: 18px;
+                line-height: 1.3;
+            }
+
+            .faq-answer-content {
+                padding: 0 16px 16px;
+            }
+
+            .faq-answer.open {
+                max-height: 400px; /* Increased for mobile to accommodate more content */
+            }
+
+            .faq-answer-content p {
+                font-size: 20px;
+                line-height: 30px;
+                margin-top: 12px;
+                font-weight: 300;
+            }
+
+            .faq-chevron {
+                margin-top: 0;
+            }
+
+            .faq-accordion {
+                width: 100%;
+            }
+        }
+
+        @media (max-width: 479px) {
+            .faq-description {
+                font-size: 24px;
+                line-height: 22px;
+                text-indent: 0;
+                text-align: center;
+                padding: 0 1rem;
+                margin: 0 auto 2rem;
+            }
+
+            .faq-heading {
+                text-align: center;
+                width: 100%;
+            }
+
+            .faq-section,
+            .proximity-section-wrapper {
+                padding: 40px 1rem;
+            }
+
+            .proximity-header {
+                margin-bottom: 1.5rem;
+                padding-left: 0;
+            }
+
+            .proximity-content {
+                gap: 1.5rem;
+            }
+
+            .proximity-map-container {
+                max-height: 650px;
+            }
+
+            .proximity-map {
+                height: 550px;
+            }
+
+            .floor-plans-tabs {
+                justify-content: center;
+                flex-wrap: wrap;
+                gap: 10px;
+                margin-bottom: 2rem;
+            }
+
+            .tab-button {
+                flex: 1 1 auto;
+                min-width: 120px;
+                text-align: center;
+            }
+
+            .floor-plans-eyebrow,
+            .proximity-buttons-title,
+            .faq-eyebrow {
+                text-align: center;
+                width: 100%;
+            }
+
+            .proximity-title {
+                text-align: center;
+                width: 100%;
+                hyphens: auto;
+                word-wrap: break-word;
+                overflow-wrap: break-word;
+            }
+
+            .faq-heading {
+                font-size: 42px;
+                line-height: 48px;
+            }
+
+            .faq-section {
+                padding: 40px 16px;
+            }
+
+            .faq-button {
+                padding: 14px 16px;
+            }
+
+            .faq-question {
+                font-size: 16px;
+                margin-bottom: 0.3rem;
+            }
+
+            .faq-lead,
+            .faq-answer-content p {
+                font-size: 14px;
+                line-height: 1.4;
+            }
+
+            .faq-content {
+                gap: 2rem;
+            }
+        }
+
+        /* Subtitle-big Elements Responsive */
+        @media (max-width: 991px) {
+            .discover-description,
+            .residences-subheading,
+            .amenities-title {
+                font-size: 38px;
+                line-height: 56px;
+                text-indent: 23%;
+                max-width: 850px;
+            }
+
+            .h3-big,
+            .discover-title,
+            .residences-title {
+                font-size: 72px;
+                line-height: 82px;
+                text-align: center;
+                margin-bottom: 2rem;
+            }
+
+            .discover-header {
+                margin-bottom: 3rem;
+                text-align: center;
+            }
+
+            .discover-grid {
+                grid-template-columns: repeat(3, 1fr);
+                gap: 24px;
+                width: 100%;
+                max-width: 100%;
+            }
+
+            .image-card,
+            .cta-card {
+                height: 320px;
+                border-radius: 20px;
+            }
+
+            .cta-card {
+                grid-column: span 3;
+                max-height: 250px;
+                padding: 2rem;
+            }
+
+            .discover {
+                padding: 70px 2rem;
+            }
+
+            .discover-container {
+                max-width: 900px;
+            }
+
+            .cta-headline {
+                font-size: 1.75rem;
+                margin-bottom: 1.5rem;
+            }
+
+            .button-outline {
+                padding: 14px 28px;
+                font-size: 1.125rem;
+            }
+
+            .amenities-section {
+                padding: 70px clamp(24px, 5vw, 48px);
+            }
+
+            .amenities-collage {
+                height: 350px;
+            }
+        }
+
+        @media (max-width: 767px) {
+            .discover-description,
+            .amenities-title {
+                font-size: 28px;
+                line-height: 42px;
+                margin-bottom: 2.5rem;
+                padding: 0;
+            }
+
+            .discover-description,
+            .proximity-description {
+                text-align: center;
+                text-indent: 0;
+                margin-left: auto;
+                margin-right: auto;
+            }
+
+            .residences-subheading {
+                font-size: 26px;
+                line-height: 36px; /* Match intro paragraph line height */
+                text-indent: 0;
+                text-align: center;
+                margin: 0 auto 2rem;
+                padding: 0 0.5rem; /* Match intro paragraph padding */
+            }
+
+            .discover-title,
+            .residences-title,
+            .h3-big {
+                font-size: 60px;
+                line-height: 70px;
+                text-align: center;
+                margin-bottom: 1.5rem;
+                width: 100%;
+            }
+
+            .discover {
+                padding: 60px 1.5rem;
+            }
+
+            .discover-container {
+                max-width: 95%;
+                width: 95%;
+                margin: 0 auto;
+            }
+
+            .discover-header {
+                margin-bottom: 2.5rem;
+                text-align: center;
+                padding: 0;
+            }
+
+            .discover-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 20px;
+                width: 100%;
+            }
+
+            .image-card,
+            .cta-card {
+                height: 280px;
+                border-radius: 18px;
+                box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+            }
+
+            .cta-card {
+                grid-column: span 2;
+                padding: 1.75rem;
+            }
+
+            .button-outline {
+                padding: 14px 28px;
+                font-size: 1rem;
+                min-width: 180px;
+            }
+
+            .cta-headline {
+                font-size: 1.5rem;
+                margin-bottom: 1.5rem;
+            }
+
+            .amenities-section {
+                padding: 60px clamp(16px, 5vw, 32px);
+            }
+
+            .amenities-collage {
+                grid-template-columns: repeat(2, 1fr);
+                height: 320px;
+            }
+
+            .amenity-image:nth-child(3) {
+                grid-column: 1 / -1;
+                height: 280px;
+            }
+        }
+
+        @media (max-width: 479px) {
+            .discover-description,
+            .residences-subheading,
+            .amenities-title {
+                font-size: 26px;
+                line-height: 36px;
+                text-indent: 0;
+                text-align: center;
+                padding: 0 1rem;
+                margin: 0 auto 2rem;
+            }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .nav-container {
+                padding: 0 1rem;
+                justify-content: space-between;
+                flex-direction: row;
+                align-items: center;
+            }
+
+            .nav-logo img {
+                height: 40px !important;
+                display:flex;
+                align-items: center;
+                justify-content: center;
+            }
+
+            .nav-links {
+                display: flex;
+                gap: 1rem;
+            }
+
+            .navigation {
+                border-bottom-left-radius: 20px;
+                border-bottom-right-radius: 20px;
+                padding : 0.6rem 1.5rem !important;
+            }
+
+            .nav-links a {
+                font-size: 13px;
+            }
+        }
+
+        @media (max-width: 479px) {
+            .nav-container {
+                padding: 0 1rem;
+                justify-content: space-between;
+                flex-direction: row;
+                align-items: center;
+            }
+
+            .nav-logo img {
+                height: 35px;
+            }
+
+            .nav-links {
+                gap: 1.25rem;
+                justify-content: flex-end;
+            }
+
+            .nav-links a {
+                font-size: 12px;
+                font-weight: 600;
+            }
+
+            .navigation {
+                border-bottom-left-radius: 15px;
+                border-bottom-right-radius: 15px;
+                padding : 0.6rem 0.5rem !important;
+            }
+            
+            /* FAQ Section Mobile Fix */
+            .faq-content {
+                display: flex !important;
+                flex-direction: column !important;
+                gap: 3rem !important;
+                align-items: center !important;
+                text-align: center !important;
+            }
+            
+            .faq-left {
+                padding-right: 0 !important;
+                max-width: 800px !important;
+            }
+            
+            .faq-right {
+                padding-left: 0 !important;
+                width: 100% !important;
+                max-width: 800px !important;
+            }
+            
+            .faq-heading {
+                text-align: center !important;
+            }
+            
+            /* Proximity Section Mobile Fix */
+            .proximity-content {
+                display: flex !important;
+                flex-direction: column !important;
+                gap: 3rem !important;
+                align-items: center !important;
+            }
+            
+            .proximity-buttons {
+                flex-direction: row !important;
+                flex-wrap: wrap !important;
+                justify-content: center !important;
+                max-width: 800px !important;
+            }
+            
+            .proximity-buttons-title {
+                width: 100% !important;
+                text-align: center !important;
+            }
+            
+            .proximity-map-container {
+                width: 100% !important;
+                max-width: 1000px !important;
+            }
+            
+            /* Contact Section Mobile Fix */
+            .contact-main-card {
+                display: flex !important;
+                flex-direction: column !important;
+                grid-template-columns: none !important;
+                gap: 0 !important;
+                min-height: auto !important;
+            }
+            
+            .contact-left-content {
+                order: 1 !important;
+                text-align: center !important;
+                padding-left: 0 !important;
+                padding-right: 0 !important;
+            }
+            
+            .contact-form-card {
+                order: 2 !important;
+                margin: 1.5rem !important;
+                border-radius: 45px !important;
+                max-width: 320px !important;
+                background: rgba(255, 255, 255, 0.95) !important;
+                backdrop-filter: blur(15px) !important;
+                align-self: center !important;
+            }
+            
+            .contact-section {
+                padding-left: 0 !important;
+                padding-right: 0 !important;
+            }
+            
+            .contact-form-row {
+                display: flex !important;
+                flex-direction: column !important;
+                gap: 1rem !important;
+            }
+            
+            .contact-form-row .contact-form-field {
+                flex: none !important;
+                max-width: 100% !important;
+                width: 100% !important;
+            }
+            
+            .contact-form-title {
+                font-size: 1.5rem;
+            }
+            
+            .contact-form-input,
+            .contact-form-select,
+            .contact-form-textarea {
+                padding: 0.75rem 1rem;
+            }
+            
+            .contact-dashed-arrow {
+                display: none;
+            }
+        }
+        
+        /* FAQ Section Mobile Fix */
+        .faq-content {
+            display: flex !important;
+            flex-direction: column !important;
+            gap: 3rem !important;
+            align-items: center !important;
+            text-align: center !important;
+        }
+        
+        .faq-left {
+            padding-right: 0 !important;
+            max-width: 800px !important;
+        }
+        
+        .faq-right {
+            padding-left: 0 !important;
+            width: 100% !important;
+            max-width: 800px !important;
+        }
+        
+        .faq-heading {
+            text-align: center !important;
+        }
+        
+        /* Proximity Section Mobile Fix */
+        .proximity-content {
+            display: flex !important;
+            flex-direction: column !important;
+            gap: 3rem !important;
+            align-items: center !important;
+        }
+        
+        .proximity-buttons {
+            flex-direction: row !important;
+            flex-wrap: wrap !important;
+            justify-content: center !important;
+            max-width: 800px !important;
+        }
+        
+        .proximity-buttons-title {
+            width: 100% !important;
+            text-align: center !important;
+        }
+        
+        .proximity-map-container {
+            width: 100% !important;
+            max-width: 1000px !important;
+        }
+        
+        /* Contact Section Mobile Fix */
+        .contact-main-card {
+            padding: 6rem !important;
+            display: flex !important;
+            flex-direction: row !important;
+            justify-content: space-between !important;
+            grid-template-columns: none !important;
+            gap: 4 !important;
+            min-height: auto !important;
+        }
+        
+        .contact-left-content {
+            order: 1 !important;
+            text-align: center !important;
+            padding-left: 0 !important;
+            padding-right: 0 !important;
+        }
+        
+        .contact-form-card {
+            order: 2 !important;
+            margin: 1.5rem !important;
+            border-radius: 45px !important;
+            max-width: 320px !important;
+            background: rgba(255, 255, 255, 0.95) !important;
+            backdrop-filter: blur(15px) !important;
+            align-self: center !important;
+        }
+        
+        .contact-section {
+            padding-left: 0 !important;
+            padding-right: 0 !important;
+        }
+        
+        .contact-form-row {
+            display: flex !important;
+            flex-direction: column !important;
+            gap: 1rem !important;
+        }
+        
+        .contact-form-row .contact-form-field {
+            flex: none !important;
+            max-width: 100% !important;
+            width: 100% !important;
+        }
+        
+        .contact-form-title {
+            font-size: 1.5rem;
+        }
+        
+        .contact-form-input,
+        .contact-form-select,
+        .contact-form-textarea {
+            padding: 0.75rem 1rem;
+        }
+        
+        .contact-dashed-arrow {
+            display: none;
+        }
+        
+        .hero-content {
+            padding: 0 1rem;
+        }
+        
+        .hero-title {
+            font-size: 3rem;
+        }
+        
+        .hero-subtitle {
+            font-size: 1rem;
+        }
+        
+        
+        .intro-container {
+            margin: 0 1rem;
+            padding: 2rem 1.5rem;
+        }
+        
+        .intro-text {
+            font-size: 1.5rem;
+        }
+        
+        .details-grid {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .detail-item {
+            border-right: none;
+        }
+        
+        .aerial-container {
+            padding: 0 1rem;
+        }
+        
+        .call-to-action {
+            bottom: 1rem;
+            right: 1rem;
+            padding: 0.75rem 1rem;
+        }
+        
+        .call-to-action p {
+            font-size: 0.9rem;
+        }
+        
+        .discover-grid {
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+        }
+        
+        .image-card,
+        .cta-card {
+            height: 300px;
+        }
+        }
+        
+        @media (max-width: 480px) {
+            .residences-subheading {
+                font-size: 1.2rem;
+                line-height: 36px; /* Match intro paragraph line height */
+                text-indent: 0;
+                text-align: center;
+                margin: 0 auto 2rem;
+                padding: 0 0.5rem; /* Match intro paragraph padding */
+            }
+
+            .discover-grid {
+                display: flex;
+                flex-direction: column;
+                gap: 20px;
+                width: 100%;
+            }
+
+            .discover-header {
+                margin-bottom: 2.5rem;
+                text-align: center;
+                padding: 0 1rem;
+            }
+
+            .discover-title {
+                font-size: 2.8rem;
+                line-height: 3.2rem;
+                margin-bottom: 1.5rem;
+                text-align: center;
+                width: 100%;
+            }
+
+            .discover-description,
+            .proximity-description {
+                font-family: Raleway, sans-serif;
+                font-weight: 300; /* Lighter */
+                font-size: 1.2rem;
+                line-height: 36px; /* Updated to match intro paragraph line height */
+                color: var(--font);
+                text-align: center;
+                padding: 0;
+                margin: 0 auto 2rem;
+                max-width: 100%;
+            }
+
+            .discover {
+                padding: 60px 1.5rem;
+            }
+
+            .discover-container {
+                max-width: 100%;
+            }
+
+            .image-card,
+            .cta-card {
+                height: 300px;
+                margin-bottom: 0;
+                width: 100%;
+                overflow: hidden;
+                border-radius: 16px;
+                box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+            }
+
+            .cta-card {
+                padding: 1.2rem;
+            }
+
+            .cta-headline {
+                font-size: 1.2rem;
+                margin-bottom: 1rem;
+            }
+
+            .button-outline {
+                padding: 14px 25px;
+                font-size: 16px;
+            }
+
+            .discover-title,
+            .residences-title,
+            .h3-big {
+                font-size: 42px;
+                line-height: 48px;
+                text-align: center;
+                width: 100%;
+                margin-bottom: 1.5rem;
+            }
+
+            .discover-header,
+            .residences-header,
+            .amenities-header {
+                text-align: center;
+                padding: 0 1rem;
+                margin-bottom: 2rem;
+            }
+
+            .discover {
+                padding: 40px 1rem;
+            }
+
+            .card-image {
+                width: 100%;
+                height: 100%;
+                transform: scale(1.35);
+                object-position: center;
+            }
+
+            .image-card:hover .card-image {
+                transform: scale(1.4);
+            }
+
+            .discover-container {
+                width: 100%;
+                max-width: 540px;
+                margin: 0 auto;
+                padding: 0;
+            }
+
+            .cta-card {
+                border-radius: 16px;
+                padding: 1.5rem;
+            }
+
+            .cta-eyebrow {
+                font-size: 0.875rem;
+                margin-bottom: 0.75rem;
+            }
+
+            .cta-headline {
+                font-size: 1.5rem;
+                margin-bottom: 1.25rem;
+            }
+
+            .button-outline {
+                padding: 12px 24px;
+                font-size: 1rem;
+                min-width: 180px;
+            }
+
+            .residences-section,
+            .amenities-section,
+            .floor-plans-section {
+                padding: 40px 1rem;
+            }
+            
+            .amenities-collage {
+                grid-template-columns: 1fr;
+                height: auto;
+            }
+
+            .amenity-image {
+                height: 220px;
+            }
+
+            .amenity-image:nth-child(2),
+            .amenity-image:nth-child(3) {
+                border-left: none;
+                border-top: 1px solid rgba(0, 0, 0, 0.06);
+            }
+
+            .amenities-section {
+                padding: 40px 16px;
+            }
+
+            .amenities-header {
+                margin-bottom: 2.5rem;
+            }
+            
+            .proximity-button {
+                min-width: 100%;
+                margin-bottom: 0.5rem;
+                padding: 0.625rem 1rem;
+                font-size: 0.85rem;
+            }
+            
+            .proximity-map {
+                height: 550px;
+            }
+            
+            .proximity-section-wrapper {
+                padding: 40px clamp(16px, 5vw, 64px);
+            }
+            
+            .faq-section {
+                padding: 40px clamp(16px, 5vw, 64px);
+            }
+            
+            .faq-content {
+                gap: 1.5rem;
+            }
+            
+            .faq-button {
+                padding: 12px 16px;
+            }
+            
+            .faq-answer-content {
+                padding: 0 16px 12px 16px;
+            }
+            
+            .faq-button-content {
+                gap: 0.5rem;
+            }
+            
+            .faq-question {
+                font-size: 0.95rem;
+            }
+            
+            .faq-answer-content p {
+                font-size: 0.8rem;
+            }
+            
+            .contact-section {
+                padding: 40px 1rem 60px;
+            }
+
+            .contact-main-card {
+                border-radius: 30px;
+                min-height: auto;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .contact-left-content {
+                padding: 2.5rem 1.5rem;
+                text-align: center;
+                width: 100%;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .contact-description {
+                text-align: center;
+                max-width: 90%;
+                margin: 0 auto 1.5rem;
+                padding-left: 20px;
+                padding-right: 20px;
+            }
+
+            .contact-headline {
+                font-size: 36px;
+                line-height: 40px;
+                margin-bottom: 1rem;
+                letter-spacing: -0.5px;
+            }
+
+            .contact-description {
+                font-size: 16px;
+                line-height: 24px;
+                margin-bottom: 1rem;
+            }
+
+            .contact-form-card {
+                padding: 25px;
+                margin: 0 auto;
+                max-width: 90%;
+                width: 90%;
+                border-radius: 25px;
+                box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+            }
+
+            .contact-form-title {
+                font-size: 1.3rem;
+            }
+
+            .contact-form-subtitle {
+                font-size: 0.9rem;
+            }
+
+            .contact-form-input,
+            .contact-form-select,
+            .contact-form-textarea {
+                padding: 0.75rem 1rem;
+                font-size: 0.9rem;
+            }
+
+            .contact-form-button {
+                padding: 0.8rem 1.5rem;
+                font-size: 0.9rem;
+            }
+
+            .contact-form-row {
+                flex-direction: column !important;
+                gap: 1rem !important;
+            }
+
+            .contact-form-row .contact-form-field {
+                max-width: 100% !important;
+            }
+
+            .contact-dashed-arrow {
+                display: none;
+            }
+
+            .contact-phone-cta {
+                position: relative;
+                bottom: auto;
+                right: auto;
+                margin: 1rem auto;
+                display: block;
+                text-align: center;
+                width: fit-content;
+                font-size: 0.8rem;
+                padding: 0.6rem 1.2rem;
+            }
+            
+            .faq-section {
+                padding: 60px clamp(16px, 5vw, 64px);
+            }
+            
+            .faq-content {
+                gap: 2rem;
+            }
+            
+            .faq-button {
+                padding: 14px 18px;
+            }
+            
+            .faq-answer-content {
+                padding: 0 18px 14px 18px;
+            }
+            
+            .faq-button-content {
+                gap: 0.75rem;
+            }
+            
+            .faq-question {
+                font-size: 1rem;
+            }
+            
+            .faq-lead,
+            .faq-answer-content p {
+                font-size: 0.875rem;
+            }
+            
+            .contact-section {
+                padding: 60px clamp(16px, 5vw, 64px) 80px;
+            }
+            
+            .contact-main-card {
+                display: flex;
+                flex-direction: column;
+                gap: 0;
+                min-height: auto;
+            }
+            
+            .contact-left-content {
+                padding: 3rem 2rem;
+                text-align: center;
+                order: 1;
+            }
+            
+            .contact-form-card {
+                margin: 0;
+                border-radius: 0;
+                padding: 2rem;
+                order: 2;
+                box-shadow: none;
+            }
+            
+            .contact-form-row {
+                flex-direction: column;
+                gap: 1rem;
+            }
+            
+            .contact-form-row .contact-form-field {
+                max-width: 100%;
+            }
+            
+            .contact-phone-cta {
+                position: relative;
+                bottom: auto;
+                right: auto;
+                margin: 1rem auto 0;
+                display: block;
+                text-align: center;
+                width: fit-content;
+            }
+            
+            .contact-concave-notch {
+                display: none;
+            }
+        }
+        
+        @media (max-width: 600px) {
+            .proximity-description {
+                font-size: 22px;
+                line-height: 32px;
+                width: 100%;
+                color: rgba(255, 255, 255, 0.9);
+                text-align: center;
+                text-indent: 0;
+                padding: 0 0.5rem;
+                margin: 0 auto 1.5rem;
+            }
+
+            .amenities-collage {
+                grid-template-columns: 1fr;
+                height: auto;
+            }
+            
+            .amenity-image {
+                height: 280px;
+            }
+            
+            .amenity-image:nth-child(2),
+            .amenity-image:nth-child(3) {
+                border-left: none;
+                border-top: 1px solid rgba(0, 0, 0, 0.06);
+            }
+            
+            .amenity-image:nth-child(3) {
+                grid-column: auto;
+            }
+            
+            .amenities-header {
+                margin-bottom: 2.5rem;
+            }
+            
+            .floor-plans-tabs {
+                flex-wrap: wrap;
+                gap: 0.75rem;
+            }
+            
+            .tab-button {
+                padding: 0.625rem 1.5rem;
+                font-size: 0.9rem;
+            }
+            
+            .floor-plan-image-container {
+                max-width: 100%;
+            }
+            
+            .duplex-images {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+            }
+            
+            .duplex-floor-title {
+                font-size: 1.25rem;
+            }
+            
+            .proximity-header {
+                padding-left: 0;
+            }
+            
+            .proximity-content {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+            
+            .proximity-buttons {
+                flex-direction: row;
+                flex-wrap: wrap;
+                gap: 0.75rem;
+            }
+            
+            .proximity-button {
+                flex: 1;
+                min-width: calc(50% - 0.375rem);
+                text-align: center;
+                padding: 0.75rem 1rem;
+                font-size: 0.9rem;
+            }
+            
+            .proximity-map {
+                height: 550px;
+            }
+            
+            .faq-content {
+                grid-template-columns: 1fr;
+                gap: 3rem;
+            }
+            
+            .faq-left {
+                padding-right: 0;
+                text-align: center;
+            }
+            
+            .faq-right {
+                padding-left: 0;
+            }
+            
+            .faq-button {
+                padding: 16px 20px;
+            }
+            
+            .faq-answer-content {
+                padding: 0 20px 16px 20px;
+            }
+            
+            .faq-question {
+                font-size: 1.125rem;
+            }
+            
+            .faq-lead {
+                font-size: 0.9rem;
+            }
+        }
+        
+        /* Proximity Section */
+        .proximity-section-wrapper {
+            padding: 80px clamp(16px, 5vw, 64px);
+            background: rgb(0, 49, 48);
+        }
+
+        .proximity-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .proximity-header {
+            text-align: left;
+            margin-bottom: 3rem;
+            padding-left: 30px;
+        }
+
+        .proximity-title {
+            font-family: 'Raleway', sans-serif;
+            font-size: 36px;
+            font-weight: 400;
+            line-height: 44px;
+            margin-top: 0;
+            margin-bottom: 0.625rem;
+            color: rgb(191, 150, 108);
+        }
+
+        .proximity-subtitle {
+            margin-top: 1.25rem;
+        }
+
+        .proximity-description {
+            font-family: 'Raleway', sans-serif;
+            font-size: 32px;
+            font-weight: 300; /* Lighter */
+            line-height: 42px;
+            text-indent: 23%;
+            color: rgba(255, 255, 255, 0.9);
+            margin: 0;
+        }
+
+        .proximity-content {
+            display: grid;
+            grid-template-columns: 300px 1fr;
+            gap: 3rem;
+            align-items: start;
+        }
+
+        .proximity-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .proximity-buttons-title {
+            color: rgb(191, 150, 108);
+            font-size: 20px;
+            font-weight: 500;
+            line-height: 20px;
+            font-family: 'Raleway', sans-serif;
+            margin-bottom: 1rem;
+        }
+
+        .proximity-button {
+            font-family: 'Raleway', sans-serif;
+            padding: 0.875rem 1.5rem;
+            border-radius: 25px;
+            border: 1px solid rgb(191, 150, 108);
+            background: transparent;
+            color: rgb(191, 150, 108);
+            font-size: 0.95rem;
+            font-weight: 400;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: left;
+        }
+
+        .proximity-button:hover {
+            border-color: rgb(191, 150, 108);
+            background: rgba(191, 150, 108, 0.1);
+            color: rgb(191, 150, 108);
+        }
+
+        .proximity-button.active {
+            background: rgba(191, 150, 108, 0.2);
+            color: rgb(191, 150, 108);
+            border-color: rgb(191, 150, 108);
+        }
+
+        .proximity-map-container {
+            position: relative;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+        }
+
+        .proximity-map {
+            width: 100%;
+            height: 550px;
+            border-radius: 15px;
+            filter: hue-rotate(60deg) saturate(0.7) brightness(0.95);
+        }
+
+        /* FAQ Section */
+        .faq-section {
+            padding: 80px clamp(16px, 5vw, 64px);
+            background: white;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .faq-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+        }
+
+        .faq-content {
+            display: grid;
+            grid-template-columns: 40% 60%;
+            gap: 4rem;
+            align-items: start;
+        }
+
+        .faq-left {
+            padding-right: 2rem;
+        }
+
+        .faq-heading {
+            font-family: 'Raleway', sans-serif;
+            font-size: clamp(4rem, 8vw, 6rem);
+            font-weight: 500;
+            color: var(--heading-color);
+            margin-top: 0;
+            margin-bottom: 1.5rem;
+            text-align: left;
+            position: relative;
+        }
+
+        .faq-description {
+            font-family: 'Raleway', sans-serif;
+            font-size: 32px;
+            font-weight: 300; /* Lighter */
+            line-height: 42px;
+            text-indent: 23%;
+            color: var(--font);
+            margin-top: 15px;
+            position: relative;
+        }
+
+        .faq-right {
+            padding-left: 1rem;
+            width: 100%;
+        }
+
+        .faq-eyebrow {
+            color: var(--heading-color);
+            font-size: 20px;
+            font-weight: 500;
+            line-height: 20px;
+            font-family: 'Raleway', sans-serif;
+            letter-spacing: 2px;
+            margin-bottom: 2rem;
+            position: relative;
+        }
+
+        .faq-accordion {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            width: 100%;
+        }
+
+        .faq-item {
+            border-radius: 30px;
+            border: 1px solid rgba(0, 0, 0, 0.15);
+            overflow: hidden;
+            transition: all 0.3s ease;
+            width: 100%;
+            background: white;
+        }
+
+        .faq-item:hover,
+        .faq-item:focus-within {
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.06);
+            border-color: rgba(0, 0, 0, 0.25);
+        }
+
+        .faq-button {
+            width: 100%;
+            background: transparent;
+            border: none;
+            padding: 20px 24px;
+            cursor: pointer;
+            text-align: left;
+            transition: all 0.2s ease;
+            position: relative;
+        }
+
+        .faq-button:focus {
+            outline: 2px solid var(--heading-color);
+            outline-offset: 2px;
+        }
+
+        .faq-button-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 1rem;
+            width: 100%;
+        }
+
+        .faq-text {
+            flex: 1;
+        }
+
+        .faq-question {
+            color: var(--heading-color);
+            margin: 0 0 0.5rem 0;
+            font-family: 'Raleway', sans-serif;
+            font-size: 1.2rem;
+            font-weight: 500;
+        }
+
+        .faq-lead {
+            font-family: 'Raleway', sans-serif;
+            font-size: 0.95rem;
+            color: #666;
+            margin: 0;
+            line-height: 1.5;
+        }
+
+        .faq-chevron {
+            color: var(--heading-color);
+            transition: transform 0.3s ease;
+            flex-shrink: 0;
+            margin-top: 2px;
+        }
+
+        .faq-chevron.open {
+            transform: rotate(180deg);
+        }
+
+        .faq-answer {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.5s ease-in-out;
+        }
+
+        .faq-answer.open {
+            max-height: 500px; /* Increased to accommodate larger text size */
+            transition: max-height 0.5s ease-in-out;
+        }
+
+        .faq-answer-content {
+            padding: 0 24px 20px 24px;
+            border-top: 1px solid rgba(0, 0, 0, 0.08);
+            margin-top: -1px;
+        }
+
+        .faq-answer-content p {
+            font-family: Raleway, sans-serif;
+            font-weight: 300; /* Lighter */
+            font-size: 24px;
+            line-height: 38px;
+            color: var(--font);
+            text-align: left;
+            width: 100%;
+            margin: 16px 0 0 0;
+            max-width: 100%;
+        }
+
+        /* Contact Section */
+        .contact-section {
+            padding: 80px clamp(16px, 5vw, 64px) 100px;
+            background: white;
+            position: relative;
+        }
+
+        .contact-container {
+            max-width: 1300px;
+            margin: 0 auto;
+            position: relative;
+        }
+
+        .contact-main-card {
+            position: relative;
+            border-radius: 60px;
+            overflow: hidden;
+            min-height: 750px;
+            display: grid;
+            grid-template-columns: 1fr 420px;
+            align-items: center;
+            gap: 2rem;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.1);
+        }
+
+        .contact-background {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('assets/verNight.webp') center/cover no-repeat;
+            z-index: 1;
+        }
+
+        .contact-gradient-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(90deg, rgba(0,0,0,.55), rgba(0,0,0,.10) 55%, rgba(0,0,0,0) 70%);
+            z-index: 2;
+        }
+
+        .contact-left-content {
+            position: relative;
+            z-index: 3;
+            padding: 4rem 3rem 4rem 4rem;
+            color: white;
+        }
+
+        .contact-eyebrow {
+            font-family: 'Raleway', sans-serif;
+            font-size: 1.2rem;
+            /* text-transform: uppercase; */
+            letter-spacing: 2px;
+            margin-bottom: 1.5rem;
+            font-weight: 500;
+            color: var(--heading-color);
+            opacity: 0.9;
+        }
+
+        .contact-headline {
+            font-family: 'Raleway', sans-serif;
+            font-size: 48px;
+            font-weight: 400;
+            line-height: 1.1;
+            margin-bottom: 1.5rem;
+            color: white; /* Keep white for contrast on dark background */
+        }
+
+        .contact-description {
+            font-family: 'Raleway', sans-serif;
+            font-size: 1.125rem;
+            line-height: 1.6;
+            opacity: 0.85;
+            max-width: 450px;
+            margin-bottom: 2rem;
+        }
+
+        .contact-dashed-arrow {
+            margin-top: 1rem;
+            opacity: 0.8;
+        }
+
+        .contact-form-card {
+            position: relative;
+            z-index: 4;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 45px;
+            padding: 25px;
+            margin: 0.8rem;
+            max-width: 320px;
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);
+            backdrop-filter: blur(15px);
+        }
+
+        .contact-form-header {
+            margin-bottom: 1.5rem;
+        }
+
+        .contact-form-title {
+            font-family: 'Raleway';
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--heading-color);
+            margin-bottom: 0.5rem;
+        }
+
+        .contact-form-subtitle {
+            font-family: 'Raleway', sans-serif;
+            font-size: 0.95rem;
+            color: #666;
+            margin: 0;
+        }
+
+        .contact-form {
+            display: flex;
+            flex-direction: column;
+            gap: 1.2rem;
+        }
+
+        .contact-form-row {
+            display: flex;
+            gap: 1rem;
+            width: 100%;
+        }
+        
+        .contact-form-row .contact-form-field {
+            flex: 1;
+            max-width: calc(50% - 0.5rem);
+        }
+
+        .contact-form-field {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .contact-form-label {
+            font-family: 'Raleway', sans-serif;
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: #333;
+        }
+
+        .contact-form-input,
+        .contact-form-select,
+        .contact-form-textarea {
+            font-family: 'Raleway', sans-serif;
+            padding: 0.875rem 1.25rem;
+            border-radius: 9999px;
+            border: 1px solid #E6E6E9;
+            font-size: 0.95rem;
+            transition: all 0.2s ease;
+            background: white;
+        }
+
+        .contact-form-input:focus,
+        .contact-form-select:focus,
+        .contact-form-textarea:focus {
+            outline: 2px solid #2c3e50;
+            outline-offset: 2px;
+            border-color: #2c3e50;
+        }
+
+        .contact-form-input.error,
+        .contact-form-select.error,
+        .contact-form-textarea.error {
+            border-color: #e74c3c;
+            background: #fdf2f2;
+        }
+
+        .contact-form-textarea {
+            border-radius: 16px;
+            resize: vertical;
+            min-height: 120px;
+        }
+
+        .contact-form-select-wrapper {
+            position: relative;
+        }
+
+        .contact-form-select {
+            appearance: none;
+            width: 100%;
+            padding-right: 2.5rem;
+            cursor: pointer;
+        }
+
+        .contact-form-select-wrapper svg {
+            position: absolute;
+            right: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            pointer-events: none;
+            color: #666;
+        }
+
+        .contact-form-error {
+            font-family: 'Raleway', sans-serif;
+            font-size: 0.8rem;
+            color: #e74c3c;
+            margin-top: 0.25rem;
+        }
+
+        .contact-form-button {
+            font-family: 'Raleway', sans-serif;
+            background: var(--dark-teal);
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 9999px;
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 0.5rem;
+        }
+
+        .contact-form-button:hover:not(:disabled) {
+            background: rgba(0, 49, 48, 0.8);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+        }
+
+        .contact-form-button:active {
+            transform: translateY(0);
+        }
+
+        .contact-form-button:disabled {
+            background: #bdc3c7;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .contact-form-button.submitting {
+            background: #bdc3c7;
+        }
+
+        .contact-form-legal {
+            font-family: 'Raleway', sans-serif;
+            font-size: 0.8rem;
+            color: #666;
+            text-align: center;
+            line-height: 1.4;
+            margin-top: 0.5rem;
+        }
+
+        .contact-phone-cta {
+            position: absolute;
+            bottom: 2rem;
+            right: 2rem;
+            background: var(--dark-teal);
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 9999px;
+            font-family: 'Raleway', sans-serif;
+            font-size: 0.9rem;
+            font-weight: 500;
+            z-index: 5;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+        }
+
+        .contact-phone-cta a {
+            color: white;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .contact-phone-cta a:hover {
+            text-decoration: underline;
+        }
+
+        .contact-concave-notch {
+            position: absolute;
+            bottom: -20px;
+            right: 1rem;
+            width: 40px;
+            height: 40px;
+            background: #f8f9fa;
+            border-radius: 50%;
+            z-index: 4;
+        }
+
+        /* Responsive Design for Contact Section */
+        @media (max-width: 1024px) {
+            .contact-main-card {
+                display: flex !important;
+                flex-direction: column !important;
+                grid-template-columns: none !important;
+                gap: 0 !important;
+                min-height: auto !important;
+                border-radius: 50px;
+            }
+
+            .contact-left-content {
+                order: 1 !important;
+                text-align: center !important;
+                padding: 3rem 2rem !important;
+            }
+
+            .contact-headline {
+                font-size: 70px;
+                line-height: 80px;
+            }
+
+            .contact-description {
+                font-size: 18px;
+                line-height: 28px;
+            }
+
+            .contact-form-card {
+                order: 2 !important;
+                padding: 32px;
+                margin: 2rem auto !important;
+                max-width: 450px !important;
+            }
+
+            .contact-section {
+                padding: 70px clamp(24px, 5vw, 48px) 90px;
+            }
+        }
+
+        /* Additional Contact Section Styles for Small Laptops */
+        @media (max-width: 991px) {
+            .contact-main-card {
+                display: flex !important;
+                flex-direction: column !important;
+                grid-template-columns: none !important;
+                gap: 0 !important;
+                min-height: auto !important;
+            }
+            
+            .contact-left-content {
+                order: 1 !important;
+                text-align: center !important;
+            }
+            
+            .contact-form-card {
+                order: 2 !important;
+                margin: 2rem auto !important;
+                max-width: 450px !important;
+                padding: 28px !important;
+            }
+
+            .contact-left-content {
+                padding: 2.5rem 2rem !important;
+            }
+
+            .contact-headline {
+                font-size: 60px;
+                line-height: 70px;
+            }
+
+            .contact-description {
+                font-size: 17px;
+                line-height: 26px;
+            }
+        }
+
+        /* Additional Comprehensive Responsive Design */
+        
+        /* Large Screens (1440px+) */
+        @media (min-width: 1440px) {
+            .nav-container,
+            .hero-content,
+            .intro-container,
+            .aerial-container,
+            .discover-container,
+            .amenities-container,
+            .residences-container,
+            .floor-plans-container,
+            .proximity-container,
+            .faq-container,
+            .contact-container {
+                max-width: 1400px;
+            }
+
+        }
+
+        @media (min-width: 1440px) {
+            .hero-title {
+                font-size: 7rem;
+            }
+
+            .hero-subtitle {
+                font-size: 1.5rem;
+                max-width: 650px;
+            }
+
+            .h1-scroll-word {
+                font-size: 220px;
+                line-height: 230px;
+            }
+
+            .h1-scroll-container {
+                height: 230px;
+            }
+
+            .intro-text {
+                font-size: 48px;
+                line-height: 68px;
+                margin-bottom: 6rem;
+            }
+
+            .details-grid {
+                gap: 3rem;
+            }
+
+            .detail-label {
+                font-size: 1.8rem;
+            }
+
+            .detail-value {
+                font-size: 22px;
+                line-height: 30px;
+                margin-top: 20px;
+            }
+
+            .aerial-image-wrapper {
+                border-radius: 80px;
+            }
+
+            .h3-big,
+            .discover-title,
+            .residences-title {
+                font-size: 130px;
+                line-height: 140px;
+            }
+
+            .discover-description,
+            .residences-subheading,
+            .amenities-title,
+            .proximity-description,
+            .faq-description {
+                font-size: 48px;
+                line-height: 64px;
+            }
+
+            .image-card,
+            .cta-card {
+                height: 450px;
+                border-radius: 30px;
+            }
+
+            .button-outline {
+                padding: 20px 40px;
+                font-size: 22px;
+                border-radius: 70px;
+            }
+
+            .amenities-collage {
+                height: 450px;
+                border-radius: 40px;
+            }
+
+            .floor-plan-image {
+                border-radius: 40px;
+            }
+
+            .proximity-title,
+            .faq-heading {
+                font-size: 130px;
+                line-height: 140px;
+            }
+
+            .proximity-button {
+                padding: 1rem 1.75rem;
+                font-size: 1.1rem;
+                border-radius: 30px;
+            }
+
+            .proximity-map {
+                height: 550px;
+                border-radius: 25px;
+            }
+
+            .faq-item {
+                border-radius: 25px;
+            }
+
+            .faq-button {
+                padding: 24px 30px;
+            }
+
+            .faq-question {
+                font-size: 24px;
+            }
+
+            .faq-lead,
+            .faq-answer-content p {
+                font-size: 18px;
+                line-height: 1.6;
+            }
+
+            .contact-main-card {
+                min-height: 850px;
+                border-radius: 70px;
+            }
+
+            .contact-headline {
+                font-size: 100px;
+                line-height: 110px;
+            }
+
+            .contact-description {
+                font-size: 22px;
+                line-height: 32px;
+                max-width: 550px;
+            }
+
+            .contact-form-card {
+                border-radius: 50px;
+                max-width: 420px;
+                padding: 40px;
+            }
+
+            .contact-form-title {
+                font-size: 2rem;
+            }
+
+            .contact-form-subtitle {
+                font-size: 1.1rem;
+            }
+
+            .contact-form-button {
+                padding: 1.2rem 2.5rem;
+                font-size: 1.2rem;
+            }
+        }
+        
+        
+        /* Tablet Large (769px - 1023px) */
+        @media (max-width: 1023px) and (min-width: 769px) {
+            .nav-container {
+                padding: 0 2rem;
+            }
+            
+            .nav-links {
+                gap: 1.5rem;
+            }
+            
+            .hero-content {
+                margin-top: 100px;
+            }
+            
+            .intro-text {
+                font-size: 1.3rem;
+            }
+            
+            .discover-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 24px;
+            }
+            
+            .image-card:nth-child(3) {
+                grid-column: 1 / -1;
+                max-width: 50%;
+                margin: 0 auto;
+            }
+        }
+        
+        /* Mobile Medium (321px - 375px) */
+        @media (max-width: 375px) and (min-width: 321px) {
+            .proximity-description {
+                font-size: 20px;
+                line-height: 28px;
+                width: 100%;
+                color: rgba(255, 255, 255, 0.9);
+                text-align: center;
+                text-indent: 0;
+                padding: 0 0.5rem;
+                margin: 0 auto 1.5rem;
+            }
+
+            .nav-container {
+                padding: 0 0.75rem;
+            }
+            
+            .nav-links {
+                gap: 0.75rem;
+            }
+            
+            .hero-content {
+                padding: 0 0.75rem;
+                margin-top: 50px;
+            }
+            
+            .hero-title {
+                font-size: 3rem;
+            }
+            
+            .hero-subtitle {
+                font-size: 0.95rem;
+            }
+            
+            .intro-container {
+                margin: 0 0.75rem;
+                padding: 1.75rem 1.25rem;
+            }
+            
+            .intro-text {
+                font-size: 1.1rem;
+            }
+            
+            
+            .aerial-container {
+                padding: 0 0.75rem;
+            }
+            
+            .call-to-action {
+                bottom: 0.75rem;
+                right: 0.75rem;
+                padding: 0.625rem 0.875rem;
+            }
+            
+            .call-to-action p {
+                font-size: 0.85rem;
+            }
+            
+            .discover-container,
+            .amenities-container,
+            .residences-container,
+            .floor-plans-container {
+                padding-left: 0.75rem;
+                padding-right: 0.75rem;
+            }
+            
+            .image-card,
+            .cta-card {
+                height: 250px;
+            }
+            
+            .cta-card {
+                padding: 1.25rem;
+            }
+            
+            .proximity-section-wrapper {
+                padding: 35px clamp(16px, 5vw, 64px);
+            }
+            
+            .proximity-button {
+                padding: 0.5rem 0.875rem;
+                font-size: 0.8rem;
+            }
+            
+            .proximity-map {
+                height: 550px;
+            }
+            
+            .faq-section {
+                padding: 35px clamp(16px, 5vw, 64px);
+            }
+            
+            .faq-button {
+                padding: 10px 14px;
+            }
+
+            .faq-answer-content {
+                padding: 0 14px 10px 14px;
+            }
+
+            .faq-question {
+                font-size: 0.9rem;
+            }
+            
+            .faq-answer-content p {
+                font-size: 0.75rem;
+            }
+            
+            .cta-headline {
+                font-size: 1.35rem;
+            }
+            
+            .amenity-image {
+                height: 240px;
+            }
+            
+            .tab-button {
+                padding: 0.5rem 1.25rem;
+                font-size: 0.85rem;
+            }
+            
+            .contact-section {
+                padding: 50px 0 70px 0;
+            }
+            
+            .contact-main-card {
+                display: flex !important;
+                flex-direction: column !important;
+                gap: 0 !important;
+                min-height: auto !important;
+            }
+            
+            .contact-left-content {
+                padding: 2rem 1.5rem;
+                text-align: center;
+                order: 1;
+            }
+            
+            .contact-form-card {
+                padding: 24px;
+                margin: 1rem auto;
+                border-radius: 45px;
+                order: 2;
+                box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);
+                max-width: 320px;
+                background: rgba(255, 255, 255, 0.95);
+                backdrop-filter: blur(15px);
+            }
+            
+            .contact-form-row {
+                flex-direction: column !important;
+                gap: 1rem !important;
+            }
+            
+            .contact-form-row .contact-form-field {
+                max-width: 100% !important;
+            }
+            
+            .contact-form-title {
+                font-size: 1.5rem;
+            }
+            
+            .contact-form-input,
+            .contact-form-select,
+            .contact-form-textarea {
+                padding: 0.75rem 1rem;
+            }
+            
+            .contact-dashed-arrow {
+                display: none;
+            }
+        }
+        
+        /* Mobile Small (≤320px) */
+        @media (max-width: 320px) {
+            .proximity-description {
+                font-size: 18px;
+                line-height: 26px;
+                width: 100%;
+                color: rgba(255, 255, 255, 0.9);
+                text-align: center;
+                text-indent: 0;
+                padding: 0 0.5rem;
+                margin: 0 auto 1.5rem;
+            }
+
+            .nav-container {
+                padding: 0 0.5rem;
+            }
+
+            .nav-links {
+                gap: 0.5rem;
+            }
+
+            .hero-content {
+                padding: 0 0.5rem;
+                margin-top: 40px;
+            }
+
+            .hero-title {
+                font-size: 2.5rem;
+            }
+
+            .hero-subtitle {
+                font-size: 0.9rem;
+            }
+
+            .intro-container {
+                margin: 0 0.5rem;
+                padding: 1.5rem 1rem;
+            }
+
+            .intro-text {
+                font-size: 1rem;
+            }
+
+            .aerial-container {
+                padding: 0 0.5rem;
+            }
+
+            .call-to-action {
+                bottom: 0.5rem;
+                right: 0.5rem;
+                padding: 0.5rem 0.75rem;
+            }
+
+            .call-to-action p {
+                font-size: 0.8rem;
+            }
+
+            /* Discover section improvements for smallest screens */
+            .discover {
+                padding: 40px 0.75rem;
+            }
+
+            .discover-container {
+                width: 100%;
+                max-width: 100%;
+                padding: 0;
+            }
+
+            .discover-title {
+                font-size: 2.2rem;
+                line-height: 2.6rem;
+            }
+
+            .discover-description,
+            .proximity-description {
+                font-family: Raleway, sans-serif;
+                font-weight: 300; /* Lighter */
+                font-size: 1rem;
+                line-height: 36px; /* Updated to match intro paragraph line height */
+                color: var(--font);
+                text-align: center;
+                text-indent: 0;
+                margin: 0 auto 1.5rem;
+                max-width: 100%;
+            }
+
+            .discover-grid {
+                gap: 16px;
+            }
+
+            .image-card,
+            .cta-card {
+                height: 220px;
+                width: 100%;
+                overflow: hidden;
+                border-radius: 20px;
+            }
+
+            .card-image {
+                width: 100%;
+                height: 100%;
+                transform: scale(1.35);
+                object-position: center;
+                object-fit: cover;
+            }
+
+            .cta-card {
+                padding: 1rem;
+            }
+
+            .cta-headline {
+                font-size: 1.25rem;
+                margin-bottom: 1rem;
+            }
+
+            .button-outline {
+                padding: 10px 20px;
+                font-size: 0.875rem;
+                min-width: 150px;
+            }
+
+            .amenities-container,
+            .residences-container,
+            .floor-plans-container {
+                padding-left: 0.5rem;
+                padding-right: 0.5rem;
+            }
+
+            .residences-subheading {
+                font-size: 1rem;
+                line-height: 36px; /* Match intro paragraph line height */
+                text-indent: 0;
+                text-align: center;
+                margin: 0 auto 1.5rem;
+                padding: 0 0.5rem; /* Match intro paragraph padding */
+            }
+            
+            .proximity-section-wrapper {
+                padding: 30px clamp(16px, 5vw, 64px);
+            }
+            
+            .proximity-button {
+                padding: 0.5rem 0.75rem;
+                font-size: 0.75rem;
+            }
+            
+            .proximity-map {
+                height: 550px;
+            }
+            
+            .faq-section {
+                padding: 30px clamp(16px, 5vw, 64px);
+            }
+            
+            .faq-button {
+                padding: 12px 16px;
+            }
+
+            .faq-answer-content {
+                padding: 0 16px 12px;
+            }
+
+            .faq-question {
+                font-size: 0.9rem;
+                margin-bottom: 0.3rem;
+            }
+
+            .faq-answer-content p {
+                font-size: 18px;
+                line-height: 28px;
+                font-weight: 300;
+                color: var(--font);
+            }
+
+            .faq-item {
+                border-radius: 16px;
+                margin-bottom: 0.75rem;
+            }
+
+            .faq-chevron {
+                width: 16px;
+                height: 16px;
+            }
+
+            .faq-answer.open {
+                max-height: 500px;
+            }
+            
+            .cta-headline {
+                font-size: 1.25rem;
+            }
+            
+            .amenity-image {
+                height: 220px;
+            }
+            
+            .tab-button {
+                padding: 0.5rem 1rem;
+                font-size: 0.8rem;
+            }
+            
+            .contact-section {
+                padding: 40px 0 60px 0;
+            }
+            
+            .contact-main-card {
+                display: flex !important;
+                flex-direction: column !important;
+                gap: 0 !important;
+                min-height: auto !important;
+            }
+            
+            .contact-left-content {
+                padding: 1.5rem 1rem;
+                text-align: center;
+                order: 1;
+            }
+            
+            .contact-form-card {
+                padding: 20px;
+                margin: 1rem auto;
+                border-radius: 45px;
+                order: 2;
+                box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);
+                max-width: 300px;
+                background: rgba(255, 255, 255, 0.95);
+                backdrop-filter: blur(15px);
+            }
+            
+            .contact-form-row {
+                flex-direction: column !important;
+                gap: 1rem !important;
+            }
+            
+            .contact-form-row .contact-form-field {
+                max-width: 100% !important;
+            }
+            
+            .contact-form-title {
+                font-size: 1.25rem;
+            }
+            
+            .contact-form-input,
+            .contact-form-select,
+            .contact-form-textarea {
+                padding: 0.625rem 0.875rem;
+                font-size: 0.9rem;
+            }
+            
+            .contact-form-button {
+                padding: 0.875rem 1.5rem;
+                font-size: 0.9rem;
+            }
+            
+            .contact-dashed-arrow {
+                display: none;
+            }
+        }
+        /* Additional style for proximity description to ensure it matches intro paragraph on mobile */
+        @media (max-width: 479px) {
+            .proximity-description {
+                font-family: Raleway, sans-serif !important;
+                font-weight: 300 !important;
+                font-size: 26px !important;
+                line-height: 36px !important;
+                width: 100% !important;
+                color: rgba(255, 255, 255, 0.9) !important;
+                text-align: center !important;
+                text-indent: 0 !important;
+                padding: 0 0.5rem !important;
+                margin: 0 auto 1.5rem !important;
+            }
+        }
+
+        @media (max-width: 375px) {
+            .proximity-description {
+                font-size: 20px !important;
+                line-height: 28px !important;
+            }
+        }
+
+        @media (max-width: 320px) {
+            .proximity-description {
+                font-size: 18px !important;
+                line-height: 26px !important;
+            }
+        }
+        .sticky-call {
+        position: fixed;             
+        bottom: 20px;                 
+        right: 20px;                  
+        z-index: 9999;   
+        shadow: 0 6px 20px rgba(0, 0, 0, 0.25);             
+        }
+
+        .sticky-call a {
+        display: flex;                
+        align-items: center;         
+        gap: 8px;                     
+        background-color: White;   
+        color: rgb(0, 0, 0);                 
+        padding: 14px 18px;          
+        text-decoration: none;       
+        font-size: 16px;             
+        font-weight: 600;            
+        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25); 
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        border-radius: 50px;
+        }
+
+
+        .sticky-call a:hover {
+        transform: scale(1.05);       
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35); 
+        }
+
+        .sticky-call span {
+        font-size: 20px;             
+        }
+    </style>
+</head>
+<body>
+    <div class="sticky-call">
+        <a href="tel:+919876543210">
+          <span>📞</span>               
+          Call Us Today! +91 9008555550
+        </a>
+      </div>
+    <div class="vertica-landing">
+        <!-- Navigation -->
+        <nav class="navigation">
+            <div class="nav-container">
+                <div class="nav-logo">
+                    <img src="assets/pushlogo.png" alt="Pushkalam Heritage Logo" style="height: 60px;">
+                </div>
+                <ul class="nav-links">
+                    <li><a href="#home">Home</a></li>
+                    <li><a href="#contact">Contact Us</a></li>
+                </ul>
+            </div>
+        </nav>
+
+        <!-- Hero Section -->
+        <section class="hero">
+            <div class="hero-background">
+                <div class="hero-content">
+                    <div class="hero-text">
+                        <div class="h1-scroll-container">
+                            <div class="h1-scroll-box h1-scroll-1">
+                                <h1 class="h1-scroll-word">Discover</h1>
+                            </div>
+                            <div class="h1-scroll-box h1-scroll-2">
+                                <h1 class="h1-scroll-word">Nature</h1>
+                            </div>
+                            <div class="h1-scroll-box h1-scroll-3">
+                                <h1 class="h1-scroll-word">Elevated</h1>
+                            </div>
+                            <div class="h1-scroll-box h1-scroll-4">
+                                <h1 class="h1-scroll-word">Living</h1>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Intro Section -->
+        <section class="intro">
+            <div class="intro-container">
+                <div class="intro-header">
+                    <h3 class="intro-title">Intro</h3>
+                </div>
+                <div class="intro-main">
+                    <p class="intro-text">
+                        Pushkalam Heritage offers premium 2BHK, 3BHK, and 4BHK residences where Vastu Shastra guides every detail. Abundant natural light, flowing ventilation, and lush courtyards create spaces that breathe. Here, classical grace meets contemporary comfort—a home designed for life's most meaningful moments.
+                    </p>
+                </div>
+                <div class="details-grid">
+                    <div class="detail-item">
+                        <h4 class="detail-label">15 STOREYS</h4>
+                        <p class="detail-value">Elevated living</p>
+                    </div>
+                    <div class="detail-item">
+                        <h4 class="detail-label">296 HOMES</h4>
+                        <p class="detail-value">A thoughtful community</p>
+                    </div>
+                    <div class="detail-item">
+                        <h4 class="detail-label">50+ AMENITIES</h4>
+                        <p class="detail-value">Life, beautifully designed</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Aerial View Section -->
+        <section class="aerial-view">
+            <div class="aerial-container">
+                <div class="aerial-image-wrapper">
+                    <div class="aerial-gallery">
+                        <div class="aerial-slide active">
+                            <img src="assets/ver1.webp" alt="Pushkalam Heritage aerial view" class="aerial-image">
+                        </div>
+                        <div class="aerial-slide">
+                            <img src="assets/ver2.jpg" alt="Pushkalam Heritage day view" class="aerial-image">
+                        </div>
+                        <div class="aerial-slide">
+                            <img src="assets/verNight.webp" alt="Pushkalam Heritage night view" class="aerial-image">
+                        </div>
+                        <div class="aerial-slide">
+                            <img src="assets/Final View.webp" alt="Pushkalam Heritage final view" class="aerial-image">
+                        </div>
+                        <div class="aerial-slide">
+                            <img src="assets/Vertica_Elevation_View_007_Low_Res_002.webp" alt="Pushkalam Heritage elevation view" class="aerial-image">
+                        </div>
+                        <div class="aerial-slide">
+                            <img src="assets/pool.webp" alt="Pushkalam Heritage side view" class="aerial-image">
+                        </div>
+                    </div>
+
+                    <!-- Navigation Dots -->
+                    <div class="aerial-dots">
+                        <span class="aerial-dot active" onclick="currentSlide(1)"></span>
+                        <span class="aerial-dot" onclick="currentSlide(2)"></span>
+                        <span class="aerial-dot" onclick="currentSlide(3)"></span>
+                        <span class="aerial-dot" onclick="currentSlide(4)"></span>
+                        <span class="aerial-dot" onclick="currentSlide(5)"></span>
+                        <span class="aerial-dot" onclick="currentSlide(6)"></span>
+                    </div>
+
+                    <!-- Navigation Arrows -->
+                    <button class="aerial-nav aerial-prev" onclick="plusSlides(-1)">❮</button>
+                    <button class="aerial-nav aerial-next" onclick="plusSlides(1)">❯</button>
+
+                </div>
+            </div>
+        </section>
+
+        <!-- Discover Section -->
+        <section class="discover">
+            <div class="discover-container">
+                <div class="discover-header">
+                    <h3 class="h3-big">Discover</h3>
+                    <p class="discover-description">
+                        Experience the perfect blend of tradition and modernity at Pushkalam Heritage. Our thoughtfully designed spaces feature premium finishes, architectural elegance, and amenities that enrich your lifestyle. Each residence offers a sanctuary where luxury meets functionality, creating homes that inspire and nurture.
+                    </p>
+                </div>
+                
+                <div class="discover-grid">
+                    <div class="image-card">
+                        <img src="assets/ve2.webp" alt="Heritage Charm" class="card-image">
+                        <div class="card-overlay">
+                            <h4 class="card-title">The Elevation</h4>
+                            <p class="card-description">Heritage Charm</p>
+                            <p class="card-detail">A sculpted silhouette blending classical geometry with modern elegance</p>
+                        </div>
+                    </div>
+
+                    <div class="image-card">
+                        <img src="assets/ve1.webp" alt="Vastu-Inspired Living" class="card-image">
+                        <div class="card-overlay">
+                            <h4 class="card-title">The Design</h4>
+                            <p class="card-description">Vastu-Inspired Living</p>
+                            <p class="card-detail">Spaces shaped by ancient wisdom and contemporary functionality</p>
+                        </div>
+                    </div>
+
+                    <div class="image-card">
+                        <img src="assets/ve3.webp" alt="Nature Within" class="card-image">
+                        <div class="card-overlay">
+                            <h4 class="card-title">The Experience</h4>
+                            <p class="card-description">Nature Within</p>
+                            <p class="card-detail">Garden courtyards, skywalks, and water features throughout</p>
+                        </div>
+                    </div>
+
+                    <div class="cta-card">
+                        <div class="cta-content">
+                            <div>
+                                <div class="title small">Book today!</div>
+                            </div>
+                            <h4 class="h4-black-to-white">What are you Waiting for?</h4>
+                            <div class="button-box _30-pixels">
+                                <a href="#Amazing" class="button-outline w-button">Contact Us</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Amenities Section -->
+        <section class="amenities-section">
+            <div class="amenities-container">
+                <div class="amenities-header">
+                    <p class="amenities-eyebrow">Where Every Day Feels Alive</p>
+                    <h2 class="amenities-title">
+                        From morning strolls through landscaped gardens to evening gatherings on the rooftop, Pushkalam Heritage invites you to pause, play, and celebrate life's quiet joys.
+                    </h2>
+                </div>
+                
+                <div class="amenities-collage">
+                    <div class="amenity-image">
+                        <img src="assets/gym.webp" alt="Modern fitness center with state-of-the-art equipment" class="amenity-img">
+                    </div>
+                    <div class="amenity-image">
+                        <img src="assets/pool.webp" alt="Luxurious swimming pool with panoramic views" class="amenity-img">
+                    </div>
+                    <div class="amenity-image">
+                        <img src="assets/play.webp" alt="Kids play area with safe and fun activities" class="amenity-img">
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Residences Section -->
+        <section class="residences-section">
+            <div class="residences-container">
+                <div class="residences-header">
+                    <h2 class="residences-title">Heritage Residences</h2>
+                    <p class="residences-subheading">
+                        Thoughtfully designed 2BHK, 3BHK, and 4BHK homes with airy layouts, refined finishes, wood-textured accents, and views that inspire. Every detail speaks of quiet luxury.
+                    </p>
+                </div>
+                
+                <div class="residences-showcase">
+                    <div class="day-night-wrapper works">
+                        <img
+                            src="assets/res_day.webp"
+                            alt="Pushkalam Heritage day view - luxurious interiors and breathtaking views"
+                            class="day-night-image day-view"
+                        >
+                        <img
+                            src="assets/res_night.webp"
+                            alt="Pushkalam Heritage night view - illuminated luxury living"
+                            class="day-night-image night-view"
+                        >
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Master Plan Section -->
+        <section class="master-plan-section">
+            <div class="master-plan-container">
+                <div class="master-plan-header">
+                    <p class="master-plan-eyebrow">Master Plan</p>
+                    <p class="master-plan-title">
+                        A comprehensive vision of thoughtfully planned spaces and seamless connectivity
+                    </p>
+                </div>
+                
+                <div class="master-plan-showcase">
+                    <img
+                        src="assets/Pshkalm-Top-View.webp"
+                        alt="Pushkalam Heritage Master Plan - comprehensive layout and design"
+                        class="master-plan-image"
+                    >
+                </div>
+            </div>
+        </section>
+
+        <!-- Floor Plans Section -->
+        <section class="floor-plans-section">
+            <div class="floor-plans-container">
+                <div class="floor-plans-header">
+                    <p class="floor-plans-eyebrow">Floor Plans</p>
+                    <h2 class="floor-plans-title">
+                        Spacious apartments crafted for modern living
+                    </h2>
+                </div>
+                
+                <div class="floor-plan-brochure-container">
+                    <div class="blurred-brochure" id="blurred-brochure">
+                        <div class="blur-overlay"></div>
+                        <img
+                            src="assets/oneFloor.webp"
+                            alt="Floor Plans Brochure Preview"
+                            class="brochure-preview"
+                        >
+                        <div class="download-prompt">
+                            <h3>Download Brochure</h3>
+                            <p>Enter your details to view and download our brochure</p>
+                            <form id="floorplan-form" class="floorplan-form">
+                                <div class="form-group">
+                                    <input type="text" id="name" name="name" placeholder="Your Name" required>
+                                </div>
+                                <div class="form-group">
+                                    <input type="email" id="email" name="email" placeholder="Your Email" required>
+                                </div>
+                                <div class="form-group">
+                                    <input type="tel" id="number" name="number" placeholder="Your Phone Number" required>
+                                </div>
+                                <input type="hidden" name="to_email" value="enquiry.pushkalamdevelopers@gmail.com">
+                                <div class="button-box">
+                                    <button type="submit" class="download-btn">Download Brochure</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Proximity Section -->
+        <section class="proximity-section-wrapper">
+            <div class="proximity-container">
+                <div class="proximity-header">
+                    <h5 class="proximity-title">Where Tranquility Meets Connectivity</h5>
+                    <div class="proximity-subtitle" style="width: 100%; display: flex; justify-content: center;">
+                        <p class="proximity-description" style="font-family: Raleway, sans-serif !important; font-weight: 300 !important; font-size: 26px !important; line-height: 36px !important; width: 100% !important; color: rgba(255, 255, 255, 0.9) !important; text-align: center !important; text-indent: 0 !important; padding: 0 0.5rem !important; margin: 0 auto 1.5rem !important;">
+                            Nestled in Bangalore's serene landscape, Pushkalam Heritage offers the perfect balance—peaceful living with easy access to the city's pulse.
+                        </p>
+                    </div>
+                </div>
+                
+                <div class="proximity-content">
+                    <div class="proximity-buttons">
+                        <div class="proximity-buttons-title">Location Highlights</div>
+                        <button class="proximity-button active" onclick="showProximityCategory('neighborhood')">Neighborhood</button>
+                        <button class="proximity-button" onclick="showProximityCategory('interesting')">Interesting Places</button>
+                        <button class="proximity-button" onclick="showProximityCategory('hospitals')">Hospitals</button>
+                        <button class="proximity-button" onclick="showProximityCategory('transportation')">Transportation</button>
+                        <button class="proximity-button" onclick="showProximityCategory('education')">Education</button>
+                        <button class="proximity-button" onclick="showProximityCategory('shopping')">Shopping</button>
+                        <button class="proximity-button" onclick="showProximityCategory('placesOfWorship')">Places of Worship</button>
+                    </div>
+                    
+                    <div class="proximity-map-container">
+                        <div id="proximity-map" class="proximity-map"></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- FAQ Section -->
+        <section class="faq-section">
+            <div class="faq-container">
+                <div class="faq-content">
+                    <!-- Left Column -->
+                    <div class="faq-left">
+                        <h2 class="faq-heading">Faq</h2>
+                        <p class="faq-description">
+                            Your questions matter. Here are answers to help you discover if Pushkalam Heritage is where your story begins.
+                        </p>
+                    </div>
+
+                    <!-- Right Column -->
+                    <div class="faq-right">
+                        <p class="faq-eyebrow">Questions</p>
+                        <div class="faq-accordion">
+                            <!-- FAQ Item 1 -->
+                            <div class="faq-item">
+                                <button class="faq-button" onclick="toggleFaq(0)" aria-expanded="true" aria-controls="faq-content-0">
+                                    <div class="faq-button-content">
+                                        <div class="faq-text">
+                                            <h3 class="faq-question">What makes Pushkalam Heritage unique?</h3>
+                                        </div>
+                                        <svg class="faq-chevron open" width="20" height="20" viewBox="0 0 24 24" fill="none">
+                                            <path d="M6 9L12 15L18 9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                        </svg>
+                                    </div>
+                                </button>
+                                <div id="faq-content-0" class="faq-answer open">
+                                    <div class="faq-answer-content">
+                                        <p>We blend timeless Vastu Shastra principles with contemporary architecture, offering 50+ amenities, abundant green spaces, and a community designed for meaningful living. It's not just a residence—it's a legacy for those who live beautifully.</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- FAQ Item 2 -->
+                            <div class="faq-item">
+                                <button class="faq-button" onclick="toggleFaq(1)" aria-expanded="false" aria-controls="faq-content-1">
+                                    <div class="faq-button-content">
+                                        <div class="faq-text">
+                                            <h3 class="faq-question">Is the project Vastu-compliant?</h3>
+                                        </div>
+                                        <svg class="faq-chevron" width="20" height="20" viewBox="0 0 24 24" fill="none">
+                                            <path d="M6 9L12 15L18 9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                        </svg>
+                                    </div>
+                                </button>
+                                <div id="faq-content-1" class="faq-answer">
+                                    <div class="faq-answer-content">
+                                        <p>Yes, absolutely. Pushkalam Heritage is thoughtfully designed following Vastu Shastra principles to ensure positive energy flow, optimal light, ventilation, and harmony with nature throughout every home.</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- FAQ Item 3 -->
+                            <div class="faq-item">
+                                <button class="faq-button" onclick="toggleFaq(2)" aria-expanded="false" aria-controls="faq-content-2">
+                                    <div class="faq-button-content">
+                                        <div class="faq-text">
+                                            <h3 class="faq-question">How many units are in the project?</h3>
+                                        </div>
+                                        <svg class="faq-chevron" width="20" height="20" viewBox="0 0 24 24" fill="none">
+                                            <path d="M6 9L12 15L18 9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                        </svg>
+                                    </div>
+                                </button>
+                                <div id="faq-content-2" class="faq-answer">
+                                    <div class="faq-answer-content">
+                                        <p>The project comprises 296 carefully planned homes across a 15-storey tower, creating an intimate yet vibrant community.</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- FAQ Item 4 -->
+                            <div class="faq-item">
+                                <button class="faq-button" onclick="toggleFaq(3)" aria-expanded="false" aria-controls="faq-content-3">
+                                    <div class="faq-button-content">
+                                        <div class="faq-text">
+                                            <h3 class="faq-question">Are pets allowed?</h3>
+                                        </div>
+                                        <svg class="faq-chevron" width="20" height="20" viewBox="0 0 24 24" fill="none">
+                                            <path d="M6 9L12 15L18 9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                        </svg>
+                                    </div>
+                                </button>
+                                <div id="faq-content-3" class="faq-answer">
+                                    <div class="faq-answer-content">
+                                        <p>Yes! We have a dedicated pet park as we believe pets are part of the family. Specific community guidelines will be shared during the purchase process.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Contact Section -->
+        <section class="contact-section">
+            <div class="contact-container">
+                <div class="contact-main-card">
+                    <!-- Background with gradient overlay -->
+                    <div class="contact-background">
+                        <div class="contact-gradient-overlay"></div>
+                    </div>
+
+                    <!-- Left Content -->
+                    <div class="contact-left-content">
+                        <p class="contact-eyebrow">Contact</p>
+                        <h2 class="contact-headline">
+                            Send Us Your<br />Message!
+                        </h2>
+                        <p class="contact-description">
+                            Let's begin a conversation. Discover how Pushkalam Heritage can become the home where your family's legacy unfolds.
+                        </p>
+                    </div>
+
+                    <!-- Right Form Card -->
+                    <div class="contact-form-card">
+                        <div class="contact-form-header">
+                            <h3 class="contact-form-title">Contact Us</h3>
+                            <p class="contact-form-subtitle">
+                                Don't be shy we are very friendly people!
+                            </p>
+                        </div>
+
+                        <form class="contact-form" onsubmit="handleContactSubmit(event)">
+                            <!-- Row 1: Name -->
+                            <div class="contact-form-field">
+                                <input type="text" id="contact-name" name="name" class="contact-form-input" placeholder="Your name" required>
+                                <span class="contact-form-error" id="name-error"></span>
+                            </div>
+
+                            <!-- Row 2: Email -->
+                            <div class="contact-form-field">
+                                <input type="email" id="contact-email" name="email" class="contact-form-input" placeholder="Your email" required>
+                                <span class="contact-form-error" id="email-error"></span>
+                            </div>
+
+                            <!-- Row 3: Phone Number -->
+                            <div class="contact-form-field">
+                                <input type="tel" id="contact-phone" name="number" class="contact-form-input" placeholder="Your phone number" required>
+                                <span class="contact-form-error" id="phone-error"></span>
+                            </div>
+                            <input type="hidden" name="to_email" value="enquiry.pushkalamdevelopers@gmail.com">
+
+                            <!-- Submit Button -->
+                            <button type="submit" class="contact-form-button" id="contact-submit-btn">
+                                Submit
+                            </button>
+
+                            <!-- Legal Note -->
+                            <p class="contact-form-legal">
+                                By continuing you agree to Pushkalam Heritage Terms and Conditions agreement.
+                            </p>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- Phone CTA -->
+                <div class="contact-phone-cta">
+                    <span>Call Us Today! </span>
+                    <a href="tel:+918550000254">+91 8550000254</a>
+                </div>
+            </div>
+        </section>
+
+        <script>
+            // Viewport Size Indicator for Testing
+            /*
+            function createViewportSizeIndicator() {
+                const indicator = document.createElement('div');
+                indicator.style.position = 'fixed';
+                indicator.style.bottom = '10px';
+                indicator.style.left = '10px';
+                indicator.style.backgroundColor = 'rgba(0, 0, 0, 0.7)';
+                indicator.style.color = 'white';
+                indicator.style.padding = '5px 10px';
+                indicator.style.fontSize = '12px';
+                indicator.style.fontFamily = 'monospace';
+                indicator.style.zIndex = '9999';
+                indicator.style.borderRadius = '4px';
+                indicator.id = 'viewport-size';
+                document.body.appendChild(indicator);
+
+                function updateSize() {
+                    const width = window.innerWidth;
+                    let sizeCategory = '';
+
+                    if (width <= 479) {
+                        sizeCategory = 'Mobile';
+                    } else if (width <= 767) {
+                        sizeCategory = 'Tablet';
+                    } else if (width <= 991) {
+                        sizeCategory = 'Small Laptop';
+                    } else if (width <= 1439) {
+                        sizeCategory = 'Desktop';
+                    } else {
+                        sizeCategory = 'Large Screen';
+                    }
+
+                    indicator.textContent = `Viewport: ${width}px - ${sizeCategory}`;
+                }
+
+                // Update on resize and initial load
+                window.addEventListener('resize', updateSize);
+                updateSize();
+
+                // Add toggle functionality
+                indicator.addEventListener('click', function() {
+                    if (this.style.opacity === '0.2') {
+                        this.style.opacity = '1';
+                    } else {
+                        this.style.opacity = '0.2';
+                    }
+                });
+            }
+
+            // Initialize on page load
+            window.addEventListener('load', function() {
+                createViewportSizeIndicator();
+            });
+            */
+
+            // Floor Plan Form Functionality
+            document.addEventListener('DOMContentLoaded', function() {
+                const floorplanForm = document.getElementById('floorplan-form');
+                if (floorplanForm) {
+                    console.log("Brochure form detected - emails will only be sent when user submits this form");
+                    floorplanForm.addEventListener('submit', async function(e) {
+                        e.preventDefault();
+
+                        // Get form data
+                        const name = document.getElementById('name').value;
+                        const email = document.getElementById('email').value;
+                        const number = document.getElementById('number').value;
+
+                        // Send data using EmailJS
+                        try {
+                            console.log("Sending brochure request via EmailJS");
+                            console.log("Form data being sent:", {
+                                name: name,
+                                email: email,
+                                number: number,
+                                to_email: floorplanForm.elements['to_email'].value,
+                                form_type: "Brochure Download Request"
+                            });
+
+                            // Add form type to differentiate from contact form
+                            const formTypeInput = document.createElement('input');
+                            formTypeInput.type = 'hidden';
+                            formTypeInput.name = 'form_type';
+                            formTypeInput.value = 'Brochure Download Request';
+                            floorplanForm.appendChild(formTypeInput);
+
+                            let result;
+                            try {
+                                // Try form method first
+                                console.log("Trying EmailJS sendForm method with service ID:", EMAILJS_SERVICE_ID);
+                                result = await emailjs.sendForm(
+                                    EMAILJS_SERVICE_ID,      // Service ID from global variable
+                                    EMAILJS_TEMPLATE_ID,     // Template ID from global variable
+                                    floorplanForm,          // Form element
+                                    EMAILJS_USER_ID         // User ID from global variable
+                                );
+                                console.log("sendForm succeeded with result:", result);
+                                console.log("Email should be sent to:", "enquiry.pushkalamdevelopers@gmail.com");
+                            } catch (formError) {
+                                console.error("Error with sendForm method:", formError);
+
+                                // Fallback to send method
+                                console.log("Trying fallback EmailJS send method");
+                                const templateParams = {
+                                    name: name,
+                                    email: email,
+                                    number: number,
+                                    to_email: "enquiry.pushkalamdevelopers@gmail.com",
+                                    form_type: "Brochure Download Request",
+                                    message: "Requesting brochure download",
+                                    reply_to: email // Important for deliverability
+                                };
+                                console.log("Sending with params:", templateParams);
+
+                                result = await emailjs.send(
+                                    EMAILJS_SERVICE_ID,
+                                    EMAILJS_TEMPLATE_ID,
+                                    templateParams,
+                                    EMAILJS_USER_ID
+                                );
+                                console.log("Fallback send method succeeded with result:", result);
+                            }
+
+                            console.log('Brochure request sent successfully:', result);
+
+                            // Create download link for the PDF
+                            const pdfUrl = 'assets/Pushkalm-Brochure-print_landscape-Final-New_compressed.pdf';
+
+                            // Trigger download
+                            const link = document.createElement('a');
+                            link.href = pdfUrl;
+                            link.download = 'Pushkalm-Brochure-print_landscape-Final-New_compressed.pdf';
+                            link.click();
+
+                            // Remove blur and show success message
+                            document.querySelector('.blur-overlay').style.opacity = '0';
+                            const downloadPrompt = document.querySelector('.download-prompt');
+                            downloadPrompt.innerHTML = '<h3>Thank You!</h3><p>Your brochure is downloading. Our team will contact you shortly.</p>';
+
+                            // Show custom success popup instead of alert
+                            showSuccessPopup("Thank you for your response!");
+                        } catch (error) {
+                            console.error('Error sending brochure request:', error);
+                            console.error("Service ID used:", EMAILJS_SERVICE_ID);
+                            console.error("Template ID used:", EMAILJS_TEMPLATE_ID);
+
+                            // Provide a more helpful error message based on the error type
+                            if (error && error.status === 400 && error.text && error.text.includes("service ID not found")) {
+                                alert("⚠️ EmailJS Error: The service ID '" + EMAILJS_SERVICE_ID + "' was not found.\n\nPlease check your EmailJS dashboard at https://dashboard.emailjs.com/admin to find the correct service ID.");
+                            } else if (error && error.status === 400 && error.text && error.text.includes("template ID not found")) {
+                                alert("⚠️ EmailJS Error: The template ID '" + EMAILJS_TEMPLATE_ID + "' was not found.\n\nPlease check your EmailJS dashboard at https://dashboard.emailjs.com/admin to find the correct template ID.");
+                            } else {
+                                // Show detailed error to help debugging
+                                alert('Error details: ' + JSON.stringify(error));
+                            }
+                        }
+                    });
+                }
+            });
+
+            // Proximity Map Functionality
+            let proximityMap;
+            let proximityCurrentMarkers = [];
+
+            // Location data
+            const proximityLocationData = {
+                hospitals: [
+                    { name: "Columbia Asia Hospital", lat: 13.0252, lng: 77.6589, icon: "🏥", distance: "2.5 KMs" },
+                    { name: "Sai Kiran Hospital", lat: 13.0210, lng: 77.6650, icon: "🏥", distance: "1.8 KMs" },
+                    { name: "Manipal Hospital", lat: 13.0218, lng: 77.6377, icon: "🏥", distance: "3.2 KMs" },
+                    { name: "Vydehi Hospital", lat: 13.0066, lng: 77.6940, icon: "🏥", distance: "4.5 KMs" }
+                ],
+                transportation: [
+                    { name: "Kempegowda International Airport", lat: 13.1986, lng: 77.7066, icon: "✈️", distance: "25 KMs" },
+                    { name: "Baiyappanahalli Metro Station", lat: 13.0037, lng: 77.6494, icon: "🚇", distance: "7 KMs" },
+                    { name: "KR Puram Railway Station", lat: 13.0069, lng: 77.6730, icon: "🚉", distance: "4.5 KMs" },
+                    { name: "Hoskote Bus Terminal", lat: 13.0706, lng: 77.7968, icon: "🚌", distance: "12 KMs" }
+                ],
+                education: [
+                    { name: "CMR University", lat: 13.0277, lng: 77.6702, icon: "🎓", distance: "3.2 KMs" },
+                    { name: "KR Puram Govt. College", lat: 13.0060, lng: 77.6689, icon: "🎓", distance: "4.8 KMs" },
+                    { name: "New Horizon College of Engineering", lat: 12.9962, lng: 77.7008, icon: "🎓", distance: "6.5 KMs" },
+                    { name: "MVJ College of Engineering", lat: 13.0114, lng: 77.7616, icon: "🎓", distance: "8.7 KMs" }
+                ],
+                shopping: [
+                    { name: "Phoenix Marketcity", lat: 12.9985, lng: 77.6961, icon: "🛍️", distance: "6.8 KMs" },
+                    { name: "Forum Neighbourhood Mall", lat: 12.9897, lng: 77.6864, icon: "🛍️", distance: "7.2 KMs" },
+                    { name: "Gopalan Signature Mall", lat: 13.0111, lng: 77.6579, icon: "🛍️", distance: "3.5 KMs" },
+                    { name: "Varthur Central", lat: 12.9541, lng: 77.7401, icon: "🛍️", distance: "12 KMs" }
+                ],
+                interesting: [
+                    { name: "Bangalore Innovative Film City", lat: 13.1269, lng: 77.5921, icon: "🎬", distance: "18 KMs" },
+                    { name: "HAL Aerospace Museum", lat: 12.9553, lng: 77.6695, icon: "✈️", distance: "9.2 KMs" },
+                    { name: "Lalbagh Botanical Garden", lat: 12.9507, lng: 77.5848, icon: "🌸", distance: "15 KMs" },
+                    { name: "Cubbon Park", lat: 12.9763, lng: 77.5929, icon: "🌳", distance: "14 KMs" }
+                ],
+                placesOfWorship: [
+                    { name: "ISKCON Temple", lat: 13.0110, lng: 77.5511, icon: "🛕", distance: "14 KMs" },
+                    { name: "Sri Mahadeshwara Temple", lat: 13.0188, lng: 77.6647, icon: "🛕", distance: "2.2 KMs" },
+                    { name: "St. Joseph's Church", lat: 13.0014, lng: 77.6420, icon: "⛪", distance: "4.1 KMs" },
+                    { name: "Hazrath Hameed Shah Dargah", lat: 13.0050, lng: 77.7004, icon: "🕌", distance: "5.8 KMs" }
+                ]
+            };
+
+            // Initialize proximity map when page loads
+            window.addEventListener('load', function() {
+                if (typeof L !== 'undefined') {
+                    proximityMap = L.map('proximity-map', {
+                        attributionControl: false
+                    }).setView([13.0240, 77.6713], 14);
+
+                    // Add tiles
+                    L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png', {
+                        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, &copy; <a href="https://carto.com/attributions">Carto</a>',
+                    }).addTo(proximityMap);
+
+                    // Custom icon for Pushkalam Heritage
+                    const pushkalamIcon = L.icon({
+                        iconUrl: 'https://img.icons8.com/ios/452/marker.png',
+                        iconSize: [32, 32],
+                        iconAnchor: [16, 32],
+                        popupAnchor: [0, -32]
+                    });
+
+                    // Add Pushkalam Heritage marker
+                    const pushkalamMarker = L.marker([13.0240, 77.6713], { icon: pushkalamIcon }).addTo(proximityMap);
+                    pushkalamMarker.bindPopup('<b>Pushkalam Heritage</b>').openPopup();
+
+                    // Show interesting places by default
+                    showProximityCategory('interesting');
+                }
+            });
+
+            // Clear proximity markers
+            function clearProximityMarkers() {
+                proximityCurrentMarkers.forEach(marker => proximityMap.removeLayer(marker));
+                proximityCurrentMarkers = [];
+            }
+
+            // Show proximity category
+            function showProximityCategory(category) {
+                if (!proximityMap) return;
+
+                // Update button states
+                document.querySelectorAll('.proximity-button').forEach(btn => {
+                    btn.classList.remove('active');
+                });
+                event.target.classList.add('active');
+
+                // Clear existing markers
+                clearProximityMarkers();
+
+                // Add new markers
+                const locations = proximityLocationData[category];
+                if (locations) {
+                    locations.forEach(location => {
+                        const marker = L.marker([location.lat, location.lng]).addTo(proximityMap);
+                        marker.bindPopup(`<b>${location.icon} ${location.name}</b><br>Distance: ${location.distance}`);
+                        marker.on('mouseover', () => marker.openPopup());
+                        marker.on('mouseout', () => marker.closePopup());
+                        proximityCurrentMarkers.push(marker);
+                    });
+                }
+            }
+
+            // FAQ Functionality
+            let openFaqIndex = 0; // First item open by default
+
+            function toggleFaq(index) {
+                const faqItem = document.querySelector(`#faq-content-${index}`);
+                const button = document.querySelector(`[aria-controls="faq-content-${index}"]`);
+                const chevron = button.querySelector('.faq-chevron');
+                
+                // Close currently open item if different
+                if (openFaqIndex !== null && openFaqIndex !== index) {
+                    const currentOpenItem = document.querySelector(`#faq-content-${openFaqIndex}`);
+                    const currentButton = document.querySelector(`[aria-controls="faq-content-${openFaqIndex}"]`);
+                    const currentChevron = currentButton.querySelector('.faq-chevron');
+                    
+                    currentOpenItem.classList.remove('open');
+                    currentButton.setAttribute('aria-expanded', 'false');
+                    currentChevron.classList.remove('open');
+                }
+                
+                // Toggle clicked item
+                if (openFaqIndex === index) {
+                    // Close if already open
+                    faqItem.classList.remove('open');
+                    button.setAttribute('aria-expanded', 'false');
+                    chevron.classList.remove('open');
+                    openFaqIndex = null;
+                } else {
+                    // Open clicked item
+                    faqItem.classList.add('open');
+                    button.setAttribute('aria-expanded', 'true');
+                    chevron.classList.add('open');
+                    openFaqIndex = index;
+                }
+            }
+
+            // Keyboard navigation for FAQ
+            document.addEventListener('keydown', function(e) {
+                if (e.target.classList.contains('faq-button')) {
+                    const buttons = document.querySelectorAll('.faq-button');
+                    const currentIndex = Array.from(buttons).indexOf(e.target);
+                    
+                    if (e.key === 'ArrowDown') {
+                        e.preventDefault();
+                        const nextIndex = (currentIndex + 1) % buttons.length;
+                        buttons[nextIndex].focus();
+                    } else if (e.key === 'ArrowUp') {
+                        e.preventDefault();
+                        const prevIndex = (currentIndex - 1 + buttons.length) % buttons.length;
+                        buttons[prevIndex].focus();
+                    }
+                }
+            });
+
+            // Initialize EmailJS and set global variables
+            const EMAILJS_USER_ID = "sntqT8Rlh9HGiGoe0";
+
+            // IMPORTANT: Service ID must exactly match what's in your EmailJS dashboard
+            // Remove any spaces, check capitalization, and verify this ID exists in your account
+            const EMAILJS_SERVICE_ID = "service_1c4l5y5";
+
+            // IMPORTANT: Verify this template ID exists in your EmailJS account
+            // Make sure this template has {{to_email}} variable set in "To Email" field
+            // Template MUST include variables: {{name}}, {{email}}, {{message}}, {{to_email}}, {{form_type}}
+            // Please update this with your specific template ID from EmailJS
+            const EMAILJS_TEMPLATE_ID = "template_lubysto";
+
+            // Log template ID for verification
+            console.log("Using EmailJS Template ID:", EMAILJS_TEMPLATE_ID);
+
+            // Log the exact service ID being used for troubleshooting
+            console.log("Using EmailJS Service ID:", EMAILJS_SERVICE_ID);
+            console.log("⚠️ IMPORTANT: Verify this service ID exists in your EmailJS dashboard at https://dashboard.emailjs.com/admin");
+
+            (function(){
+                try {
+                    emailjs.init(EMAILJS_USER_ID);
+                    console.log("EmailJS initialized successfully");
+
+                    // Test email disabled - was causing form reset on page reload
+                    /*
+                    setTimeout(async function() {
+                        try {
+                            console.log("Sending test email to verify EmailJS configuration...");
+                            const testResult = await emailjs.send(
+                                EMAILJS_SERVICE_ID,
+                                EMAILJS_TEMPLATE_ID,
+                                {
+                                    name: "Test User",
+                                    email: "test@example.com",
+                                    to_email: "enquiry.pushkalamdevelopers@gmail.com",
+                                    form_type: "System Test",
+                                    message: "This is an automated test to verify EmailJS is working",
+                                    reply_to: "noreply@test.com"
+                                },
+                                EMAILJS_USER_ID
+                            );
+                            console.log("Test email sent successfully:", testResult);
+                            console.log("If you don't receive this test email, please check your spam folder and EmailJS template configuration");
+                        } catch (testError) {
+                            console.error("Test email failed:", testError);
+                            console.error("Service ID used:", EMAILJS_SERVICE_ID);
+                            console.error("Please check if this service ID exists in your EmailJS dashboard at https://dashboard.emailjs.com/admin");
+
+                            // Display more user-friendly error on the page
+                        }
+                    }, 1000);
+                    */
+
+                    // Console log to indicate test email is disabled
+                    console.log("Test email verification disabled - emails will only be sent when user submits a form");
+
+                } catch (error) {
+                    console.error("EmailJS initialization error:", error);
+                }
+            })();
+
+            // Contact Form Functionality
+            function validateEmail(email) {
+                const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                return re.test(email);
+            }
+
+            function showError(fieldName, message) {
+                const errorElement = document.getElementById(fieldName + '-error');
+                const inputElement = document.getElementById('contact-' + fieldName);
+                
+                if (errorElement) {
+                    errorElement.textContent = message;
+                }
+                if (inputElement) {
+                    inputElement.classList.add('error');
+                }
+            }
+
+            function clearError(fieldName) {
+                const errorElement = document.getElementById(fieldName + '-error');
+                const inputElement = document.getElementById('contact-' + fieldName);
+                
+                if (errorElement) {
+                    errorElement.textContent = '';
+                }
+                if (inputElement) {
+                    inputElement.classList.remove('error');
+                }
+            }
+
+            async function handleContactSubmit(event) {
+                event.preventDefault();
+
+                const form = event.target;
+                const formData = new FormData(form);
+                const submitBtn = document.getElementById('contact-submit-btn');
+
+                // Clear previous errors
+                clearError('name');
+                clearError('email');
+
+                // Validate form
+                let hasErrors = false;
+
+                const name = formData.get('name');
+                const email = formData.get('email');
+
+                if (!name || !name.trim()) {
+                    showError('name', 'Name is required');
+                    hasErrors = true;
+                }
+
+                if (!email || !email.trim()) {
+                    showError('email', 'Email is required');
+                    hasErrors = true;
+                } else if (!validateEmail(email)) {
+                    showError('email', 'Please enter a valid email');
+                    hasErrors = true;
+                }
+
+                if (hasErrors) return;
+
+                // Send email using EmailJS
+                submitBtn.disabled = true;
+                submitBtn.textContent = 'Sending...';
+                submitBtn.classList.add('submitting');
+
+                // Add form type to differentiate from brochure form
+                const formTypeInput = document.createElement('input');
+                formTypeInput.type = 'hidden';
+                formTypeInput.name = 'form_type';
+                formTypeInput.value = 'Contact Form Submission';
+                form.appendChild(formTypeInput);
+
+                console.log("Sending contact form via EmailJS");
+                console.log("Form data being sent:", {
+                    name: form.elements['name'].value,
+                    email: form.elements['email'].value,
+                    to_email: form.elements['to_email'].value,
+                    form_type: "Contact Form Submission"
+                });
+
+                let result;
+                try {
+                    try {
+                        // Try form method first
+                        console.log("Trying EmailJS sendForm method with service ID:", EMAILJS_SERVICE_ID);
+                        result = await emailjs.sendForm(
+                            EMAILJS_SERVICE_ID,      // Your service ID from global variable
+                            EMAILJS_TEMPLATE_ID,     // Your template ID from global variable
+                            form,                   // Form element
+                            EMAILJS_USER_ID         // Your user ID from global variable
+                        );
+                        console.log("sendForm succeeded with result:", result);
+                        console.log("Email should be sent to:", "enquiry.pushkalamdevelopers@gmail.com");
+                    } catch (formError) {
+                        console.error("Error with sendForm method:", formError);
+
+                        // Fallback to send method
+                        console.log("Trying fallback EmailJS send method");
+                        const templateParams = {
+                            name: form.elements['name'].value,
+                            email: form.elements['email'].value,
+                            to_email: "enquiry.pushkalamdevelopers@gmail.com",
+                            form_type: "Contact Form Submission",
+                            reply_to: form.elements['email'].value // Important for deliverability
+                        };
+                        console.log("Sending with params:", templateParams);
+
+                        result = await emailjs.send(
+                            EMAILJS_SERVICE_ID,
+                            EMAILJS_TEMPLATE_ID,
+                            templateParams,
+                            EMAILJS_USER_ID
+                        );
+                        console.log("Fallback send method succeeded with result:", result);
+                    }
+
+                    console.log('Email sent successfully:', result);
+
+                    // Reset form on success
+                    form.reset();
+                    // Show custom success popup
+                    showSuccessPopup("Thank you for your response!");
+
+                    // Google Analytics conversion tracking (if needed)
+                    if (typeof gtag !== 'undefined') {
+                        gtag('event', 'conversion', {
+                            send_to: 'AW-17271635167/LuzuCKegkeQaEN_54KtA',
+                            value: 1.0,
+                            currency: 'INR'
+                        });
+                    }
+                } catch (error) {
+                    console.error('Email sending error:', error);
+                    console.error("Service ID used:", EMAILJS_SERVICE_ID);
+                    console.error("Template ID used:", EMAILJS_TEMPLATE_ID);
+
+                    // Provide a more helpful error message based on the error type
+                    if (error && error.status === 400 && error.text && error.text.includes("service ID not found")) {
+                        alert("⚠️ EmailJS Error: The service ID '" + EMAILJS_SERVICE_ID + "' was not found.\n\nPlease check your EmailJS dashboard at https://dashboard.emailjs.com/admin to find the correct service ID.");
+                    } else if (error && error.status === 400 && error.text && error.text.includes("template ID not found")) {
+                        alert("⚠️ EmailJS Error: The template ID '" + EMAILJS_TEMPLATE_ID + "' was not found.\n\nPlease check your EmailJS dashboard at https://dashboard.emailjs.com/admin to find the correct template ID.");
+                    } else {
+                        // Show detailed error to help debugging
+                        alert('Error details: ' + JSON.stringify(error));
+                    }
+                } finally {
+                    submitBtn.disabled = false;
+                    submitBtn.textContent = 'Submit';
+                    submitBtn.classList.remove('submitting');
+                }
+            }
+
+            // Clear errors when user starts typing
+            document.addEventListener('input', function(e) {
+                if (e.target.id === 'contact-name') {
+                    clearError('name');
+                } else if (e.target.id === 'contact-email') {
+                    clearError('email');
+                }
+            });
+
+            // 3D Text Rotation Animation
+            let currentRotation = 0;
+            const scrollBoxes = document.querySelectorAll('.h1-scroll-box');
+
+            function rotateWords() {
+                currentRotation -= 90; // Negative for downward rotation
+                
+                if (scrollBoxes.length > 0) {
+                    scrollBoxes.forEach((box, index) => {
+                        const baseRotation = index * 90; // 0, 90, 180, 270
+                        const newRotation = baseRotation + currentRotation;
+                        
+                        if (box.classList.contains('h1-scroll-1')) {
+                            box.style.transform = `rotateX(${newRotation}deg) translateZ(50px)`;
+                        } else if (box.classList.contains('h1-scroll-2')) {
+                            box.style.transform = `rotateX(${newRotation}deg) translateZ(50px)`;
+                        } else if (box.classList.contains('h1-scroll-3')) {
+                            box.style.transform = `rotateX(${newRotation}deg) translateZ(50px)`;
+                        } else if (box.classList.contains('h1-scroll-4')) {
+                            box.style.transform = `rotateX(${newRotation}deg) translateZ(50px)`;
+                        }
+                        
+                        box.style.transition = 'transform 0.8s ease-in-out';
+                    });
+                }
+            }
+
+            // Start animation after page loads
+            if (scrollBoxes.length > 0) {
+                // Auto-rotate every 3 seconds
+                setInterval(rotateWords, 3000);
+            }
+
+            // Aerial Gallery Functionality
+            let aerialSlideIndex = 1;
+            let aerialSlideInterval;
+
+            // Show specific slide
+            function showSlide(n) {
+                const slides = document.querySelectorAll('.aerial-slide');
+                const dots = document.querySelectorAll('.aerial-dot');
+
+                if (n > slides.length) { aerialSlideIndex = 1; }
+                if (n < 1) { aerialSlideIndex = slides.length; }
+
+                // Hide all slides
+                slides.forEach(slide => {
+                    slide.classList.remove('active');
+                });
+
+                // Remove active class from all dots
+                dots.forEach(dot => {
+                    dot.classList.remove('active');
+                });
+
+                // Show current slide with animation
+                if (slides[aerialSlideIndex - 1]) {
+                    slides[aerialSlideIndex - 1].classList.add('active');
+                }
+
+                // Activate current dot
+                if (dots[aerialSlideIndex - 1]) {
+                    dots[aerialSlideIndex - 1].classList.add('active');
+                }
+            }
+
+            // Next/Previous slide
+            function plusSlides(n) {
+                aerialSlideIndex += n;
+                showSlide(aerialSlideIndex);
+                resetAutoSlide();
+            }
+
+            // Current slide (from dots)
+            function currentSlide(n) {
+                aerialSlideIndex = n;
+                showSlide(aerialSlideIndex);
+                resetAutoSlide();
+            }
+
+            // Auto-advance slides
+            function autoSlide() {
+                aerialSlideIndex++;
+                showSlide(aerialSlideIndex);
+            }
+
+            // Reset auto-slide timer
+            function resetAutoSlide() {
+                clearInterval(aerialSlideInterval);
+                aerialSlideInterval = setInterval(autoSlide, 5000);
+            }
+
+            // Initialize aerial gallery
+            function initAerialGallery() {
+                showSlide(aerialSlideIndex);
+                resetAutoSlide();
+
+                // Pause auto-slide on hover
+                const galleryWrapper = document.querySelector('.aerial-image-wrapper');
+                if (galleryWrapper) {
+                    galleryWrapper.addEventListener('mouseenter', () => {
+                        clearInterval(aerialSlideInterval);
+                    });
+
+                    galleryWrapper.addEventListener('mouseleave', () => {
+                        resetAutoSlide();
+                    });
+                }
+            }
+
+            // Start aerial gallery when page loads
+            window.addEventListener('load', initAerialGallery);
+        </script>
+        <!-- Success Popup -->
+        <div class="success-popup-overlay" id="successOverlay"></div>
+        <div class="success-popup" id="successPopup">
+            <div class="success-popup-icon">✓</div>
+            <h3>Thank You!</h3>
+            <p id="successMessage">Your message has been sent successfully.</p>
+            <button class="success-popup-btn" onclick="closeSuccessPopup()">OK</button>
+        </div>
+    </div>
+
+    <script>
+        // Success popup function
+        function showSuccessPopup(message) {
+            // Set message text
+            document.getElementById('successMessage').textContent = message;
+
+            // Show overlay and popup
+            document.getElementById('successOverlay').classList.add('show');
+            document.getElementById('successPopup').classList.add('show');
+
+            // Auto close after 4 seconds
+            setTimeout(closeSuccessPopup, 4000);
+
+            // Add click event to close popup when clicking overlay
+            document.getElementById('successOverlay').addEventListener('click', closeSuccessPopup);
+        }
+
+        // Close popup function
+        function closeSuccessPopup() {
+            document.getElementById('successOverlay').classList.remove('show');
+            document.getElementById('successPopup').classList.remove('show');
+        }
+    </script>
+</body>
+</html>
