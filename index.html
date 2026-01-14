@@ -4805,12 +4805,11 @@
                     <div class="proximity-buttons">
                         <div class="proximity-buttons-title">Location Highlights</div>
                         <button class="proximity-button active" onclick="showProximityCategory('neighborhood')">Neighborhood</button>
-                        <button class="proximity-button" onclick="showProximityCategory('interesting')">Interesting Places</button>
-                        <button class="proximity-button" onclick="showProximityCategory('hospitals')">Hospitals</button>
+                        <button class="proximity-button" onclick="showProximityCategory('foodAndBeverages')">Food And Beverages</button>
                         <button class="proximity-button" onclick="showProximityCategory('transportation')">Transportation</button>
                         <button class="proximity-button" onclick="showProximityCategory('education')">Education</button>
                         <button class="proximity-button" onclick="showProximityCategory('shopping')">Shopping</button>
-                        <button class="proximity-button" onclick="showProximityCategory('placesOfWorship')">Places of Worship</button>
+                        <button class="proximity-button" onclick="showProximityCategory('workplaces')">Workplaces</button>
                     </div>
                     
                     <div class="proximity-map-container">
@@ -4982,7 +4981,7 @@
                 <!-- Phone CTA -->
                 <div class="contact-phone-cta">
                     <span>Call Us Today! </span>
-                    <a href="tel:+918550000254">+91 8550000254</a>
+                    <a href="tel:+919008555550">+91 9008555550</a>
                 </div>
             </div>
         </section>
@@ -5155,42 +5154,60 @@
 
             // Location data
             const proximityLocationData = {
-                hospitals: [
-                    { name: "Columbia Asia Hospital", lat: 13.0252, lng: 77.6589, icon: "🏥", distance: "2.5 KMs" },
-                    { name: "Sai Kiran Hospital", lat: 13.0210, lng: 77.6650, icon: "🏥", distance: "1.8 KMs" },
-                    { name: "Manipal Hospital", lat: 13.0218, lng: 77.6377, icon: "🏥", distance: "3.2 KMs" },
-                    { name: "Vydehi Hospital", lat: 13.0066, lng: 77.6940, icon: "🏥", distance: "4.5 KMs" }
-                ],
+                // hospitals: [
+                //     { name: "Columbia Asia Hospital", lat: 13.0252, lng: 77.6589, icon: "🏥", distance: "2.5 KMs" },
+                //     { name: "Sai Kiran Hospital", lat: 13.0210, lng: 77.6650, icon: "🏥", distance: "1.8 KMs" },
+                //     { name: "Manipal Hospital", lat: 13.0218, lng: 77.6377, icon: "🏥", distance: "3.2 KMs" },
+                //     { name: "Vydehi Hospital", lat: 13.0066, lng: 77.6940, icon: "🏥", distance: "4.5 KMs" }
+                // ],
                 transportation: [
-                    { name: "Kempegowda International Airport", lat: 13.1986, lng: 77.7066, icon: "✈️", distance: "25 KMs" },
-                    { name: "Baiyappanahalli Metro Station", lat: 13.0037, lng: 77.6494, icon: "🚇", distance: "7 KMs" },
-                    { name: "KR Puram Railway Station", lat: 13.0069, lng: 77.6730, icon: "🚉", distance: "4.5 KMs" },
-                    { name: "Hoskote Bus Terminal", lat: 13.0706, lng: 77.7968, icon: "🚌", distance: "12 KMs" }
+                    { name: "Kempegowda International Airport", lat: 13.1986, lng: 77.7066, icon: "🚗", time: "40 min" },
+                    { name: "STRR Interchange", lat: 13.0502, lng: 77.6849, icon: "🚗", time: "15 min" },
+                    { name: "Whitefield Metro Station (Purple Line)", lat: 12.9951, lng: 77.7530, icon: "🚗", time: "20 min" },
+                    { name: "KR Puram Railway Station", lat: 13.0077, lng: 77.6953, icon: "🚗", time: "35 min" }
                 ],
                 education: [
-                    { name: "CMR University", lat: 13.0277, lng: 77.6702, icon: "🎓", distance: "3.2 KMs" },
-                    { name: "KR Puram Govt. College", lat: 13.0060, lng: 77.6689, icon: "🎓", distance: "4.8 KMs" },
-                    { name: "New Horizon College of Engineering", lat: 12.9962, lng: 77.7008, icon: "🎓", distance: "6.5 KMs" },
-                    { name: "MVJ College of Engineering", lat: 13.0114, lng: 77.7616, icon: "🎓", distance: "8.7 KMs" }
+                    { name: "New Baldwin International School", lat: 13.0186, lng: 77.7012, icon: "🎓", time: "10 min" },
+                    { name: "National Public School", lat: 12.9784, lng: 77.6408, icon: "🎓", time: "10 min" },
+                    { name: "Narayana E-Techno School", lat: 12.9711, lng: 77.6995, icon: "🎓", time: "10 min" },
+                    { name: "EuroKids Preschool", lat: 12.9698, lng: 77.7023, icon: "🎓", time: "10 min" },
+                    { name: "Shri Ram Global School", lat: 12.9645, lng: 77.7342, icon: "🎓", time: "15 min" },
+                    { name: "Auxilium School", lat: 12.9763, lng: 77.6279, icon: "🎓", time: "5 min" },
+                    { name: "Vibgyor High School", lat: 12.9632, lng: 77.7174, icon: "🎓", time: "15 min" },
+                    { name: "Birla Open Minds International School", lat: 12.9446, lng: 77.7218, icon: "🎓", time: "25 min" },
+                    { name: "MVJ Medical College", lat: 13.0206, lng: 77.7069, icon: "🎓", time: "8 min" },
+                    { name: "SEA College of Science & Commerce", lat: 13.0347, lng: 77.6951, icon: "🎓", time: "20 min" },
+                    { name: "Cambridge Institute of Technology", lat: 12.9709, lng: 77.7412, icon: "🎓", time: "20 min" },
+                    { name: "East Point Medical College & Hospital", lat: 12.9836, lng: 77.7405, icon: "🎓", time: "20 min" }
                 ],
                 shopping: [
-                    { name: "Phoenix Marketcity", lat: 12.9985, lng: 77.6961, icon: "🛍️", distance: "6.8 KMs" },
-                    { name: "Forum Neighbourhood Mall", lat: 12.9897, lng: 77.6864, icon: "🛍️", distance: "7.2 KMs" },
-                    { name: "Gopalan Signature Mall", lat: 13.0111, lng: 77.6579, icon: "🛍️", distance: "3.5 KMs" },
-                    { name: "Varthur Central", lat: 12.9541, lng: 77.7401, icon: "🛍️", distance: "12 KMs" }
+                    { name: "Ferrohub", lat: 12.9956, lng: 77.6992, icon: "🛍️", time: "5 min" },
+                    { name: "Orion Uptown Mall", lat: 13.0577, lng: 77.6408, icon: "🛍️", time: "2 min" },
+                    { name: "Gopalan Signature Mall", lat: 13.0111, lng: 77.6579, icon: "🛍️", time: "25 min" },
+                    { name: "DVR Town Center", lat: 12.9352, lng: 77.6245, icon: "🛍️", time: "10 min" },
+                    { name: "Isiri Hub", lat: 12.9719, lng: 77.6412, icon: "🛍️", time: "5 min" },
+                    { name: "IKEA Bengaluru", lat: 12.9204, lng: 77.6945, icon: "🛍️", time: "10 min" }
                 ],
-                interesting: [
-                    { name: "Bangalore Innovative Film City", lat: 13.1269, lng: 77.5921, icon: "🎬", distance: "18 KMs" },
-                    { name: "HAL Aerospace Museum", lat: 12.9553, lng: 77.6695, icon: "✈️", distance: "9.2 KMs" },
-                    { name: "Lalbagh Botanical Garden", lat: 12.9507, lng: 77.5848, icon: "🌸", distance: "15 KMs" },
-                    { name: "Cubbon Park", lat: 12.9763, lng: 77.5929, icon: "🌳", distance: "14 KMs" }
+                foodAndBeverages: [
+                    { name: "Geist Brewing Co.", lat: 13.0066, lng: 77.6952, icon: "🍽️", time: "2 min" },
+                    { name: "Prime Golf Brewing", lat: 12.9695, lng: 77.6407, icon: "🍽️", time: "10 min" },
+                    { name: "Red Rhino Craft Brewery", lat: 12.9136, lng: 77.6447, icon: "🍽️", time: "15 min" },
+                    { name: "Ferrohub", lat: 12.9956, lng: 77.6992, icon: "🍽️", time: "8 min" },
+                    { name: "Nandhana Palace", lat: 12.9788, lng: 77.6409, icon: "🍽️", time: "4 min" },
+                    { name: "Anand Sweets", lat: 12.9565, lng: 77.7012, icon: "🍽️", time: "8 min" },
+                    { name: "Empire Restaurant", lat: 12.9757, lng: 77.6399, icon: "🍽️", time: "7 min" }
                 ],
-                placesOfWorship: [
-                    { name: "ISKCON Temple", lat: 13.0110, lng: 77.5511, icon: "🛕", distance: "14 KMs" },
-                    { name: "Sri Mahadeshwara Temple", lat: 13.0188, lng: 77.6647, icon: "🛕", distance: "2.2 KMs" },
-                    { name: "St. Joseph's Church", lat: 13.0014, lng: 77.6420, icon: "⛪", distance: "4.1 KMs" },
-                    { name: "Hazrath Hameed Shah Dargah", lat: 13.0050, lng: 77.7004, icon: "🕌", distance: "5.8 KMs" }
+                workplaces: [
+                    { name: "Brigade Signature Towers", lat: 12.9978, lng: 77.7015, icon: "💼", time: "2 min" },
+                    { name: "M1 Comercio", lat: 12.9964, lng: 77.7031, icon: "💼", time: "2 min" },
+                    { name: "Bearys Global Research Triangle (BGRT)", lat: 13.0029, lng: 77.7084, icon: "💼", time: "5 min" },
+                    { name: "HM Tech Park", lat: 12.9265, lng: 77.6736, icon: "💼", time: "25 min" },
+                    { name: "ITPL", lat: 12.9850, lng: 77.7377, icon: "💼", time: "30 min" },
+                    { name: "KIADB Aerospace Park", lat: 13.1725, lng: 77.6638, icon: "💼", time: "25 min" },
+                    { name: "SAP Labs", lat: 12.9132, lng: 77.6831, icon: "💼", time: "25 min" },
+                    { name: "Bagmane Tech Park", lat: 12.9756, lng: 77.6576, icon: "💼", time: "30 min" }
                 ]
+
             };
 
             // Initialize proximity map when page loads
@@ -5218,7 +5235,7 @@
                     pushkalamMarker.bindPopup('<b>Pushkalam Heritage</b>').openPopup();
 
                     // Show interesting places by default
-                    showProximityCategory('interesting');
+                    showProximityCategory('foodAndBeverages');
                 }
             });
 
